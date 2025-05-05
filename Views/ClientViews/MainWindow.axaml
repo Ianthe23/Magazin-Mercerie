@@ -1,0 +1,375 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:magazin_mercerie.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="using:magazin_mercerie.Views.ClientViews"
+        mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="650"
+        x:Class="magazin_mercerie.Views.ClientViews.MainWindow"
+        x:DataType="local:MainWindow"
+        Title="Merceria - Client View"
+        TransparencyLevelHint="AcrylicBlur"
+        Background="Transparent"
+        ExtendClientAreaToDecorationsHint="True">
+
+    <Panel>
+        <ExperimentalAcrylicBorder IsHitTestVisible="False">
+            <ExperimentalAcrylicBorder.Material>
+                <ExperimentalAcrylicMaterial
+                    BackgroundSource="Digger"
+                    TintColor="Black"
+                    TintOpacity="1"
+                    MaterialOpacity="0.65" />
+            </ExperimentalAcrylicBorder.Material>
+        </ExperimentalAcrylicBorder>
+
+        <Grid RowDefinitions="Auto,*">
+            <!-- Title Bar -->
+            <Grid Grid.Row="0" Height="40" Margin="10,10,10,0">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center" Spacing="15">
+                    <Button Background="Transparent" Padding="8" Click="ToggleSplitView" ToolTip.Tip="Toggle Menu">
+                        <PathIcon Data="{StaticResource SemiIconMenu}" Width="20" Height="20"/>
+                    </Button>
+                </StackPanel>
+            </Grid>
+
+            <!-- Main Content Area -->
+            <SplitView Grid.Row="1" 
+                       Name="MainSplitView"
+                       IsPaneOpen="True"
+                       DisplayMode="CompactOverlay"
+                       OpenPaneLength="200"
+                       CompactPaneLength="0"
+                       PanePlacement="Left"
+                       UseLightDismissOverlayMode="True">
+                
+                <!-- Sidebar Content -->
+                <SplitView.Pane>
+                    <Grid RowDefinitions="Auto,*,Auto">
+                        <!-- Top Section - Category Header -->
+                        <TextBlock Grid.Row="0" Text="Categories" FontSize="18" FontWeight="SemiBold" Margin="20,20,0,15"/>
+                        
+                        <!-- Middle Section - Product Categories -->
+                        <StackPanel Grid.Row="1" Spacing="0" Margin="0,0,0,0">
+                            <Button HorizontalAlignment="Stretch" Padding="20,8" Background="Transparent" HorizontalContentAlignment="Left">
+                                <StackPanel Orientation="Horizontal" Spacing="12">
+                                    <PathIcon Data="{StaticResource SemiIconThread}" Width="16" Height="16"/>
+                                    <TextBlock Text="Ghem" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Button>
+                            
+                            <!-- Selected category with better styling -->
+                            <Button HorizontalAlignment="Stretch" Padding="20,8" HorizontalContentAlignment="Left"
+                                   Background="#4361ee" Foreground="White">
+                                <StackPanel Orientation="Horizontal" Spacing="12">
+                                    <PathIcon Data="{StaticResource SemiIconStar}" Width="16" Height="16"/>
+                                    <TextBlock Text="Ac" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Button>
+                            
+                            <Button HorizontalAlignment="Stretch" Padding="20,8" Background="Transparent" HorizontalContentAlignment="Left">
+                                <StackPanel Orientation="Horizontal" Spacing="12">
+                                    <PathIcon Data="{StaticResource SemiIconTools}" Width="16" Height="16"/>
+                                    <TextBlock Text="Croseta" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Button>
+                        </StackPanel>
+                        
+                        <!-- Bottom Section - User Profile & Logout -->
+                        <Grid Grid.Row="2" Margin="0,0,0,15">
+                            <Border Margin="10,15,10,60" Background="#23242a" CornerRadius="12" Padding="12">
+                                <Grid ColumnDefinitions="Auto,*">
+                                    <!-- User Icon -->
+                                    <Border Grid.Column="0" 
+                                            Background="#4361ee" 
+                                            CornerRadius="20" 
+                                            Width="40" Height="40" 
+                                            VerticalAlignment="Center">
+                                        <TextBlock Text="M" 
+                                                   FontWeight="Bold" 
+                                                   FontSize="18" 
+                                                   HorizontalAlignment="Center" 
+                                                   VerticalAlignment="Center"/>
+                                    </Border>
+                                    
+                                    <!-- User Name and Status -->
+                                    <StackPanel Grid.Column="1" Margin="10,0,0,0">
+                                        <TextBlock Text="Maria Client" 
+                                                   FontWeight="SemiBold"
+                                                   VerticalAlignment="Center"/>
+                                        <TextBlock Text="Online" 
+                                                   FontSize="11"
+                                                   Foreground="#43ed61"
+                                                   Opacity="0.8"
+                                                   VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
+                            
+                            <!-- Additional User Actions -->
+                            <StackPanel Margin="12,80,12,0" Orientation="Horizontal" Spacing="15" HorizontalAlignment="Center">
+                                <Button Background="Transparent" Padding="8" ToolTip.Tip="Settings">
+                                    <PathIcon Data="{StaticResource SemiIconSetting}" Width="18" Height="18"/>
+                                </Button>
+                                
+                                <Button Background="Transparent" Padding="8" ToolTip.Tip="Logout">
+                                    <PathIcon Data="{StaticResource SemiIconQuit}" Width="18" Height="18"/>
+                                </Button>
+                            </StackPanel>
+                        </Grid>
+                    </Grid>
+                </SplitView.Pane>
+                
+                <!-- Main Content Area -->
+                <Grid RowDefinitions="Auto,Auto,Auto,*" Margin="20,10,20,20">
+                    <!-- Search Bar and Cart Icon -->
+                    <Grid Grid.Row="0" ColumnDefinitions="*,Auto,Auto" Margin="0,0,0,15">
+                        <Grid Grid.Column="0" HorizontalAlignment="Center" Width="600">
+                            <TextBox Watermark="Search products...">
+                                <TextBox.InnerRightContent>
+                                    <Button Background="Transparent" Padding="8">
+                                        <PathIcon Data="{StaticResource SemiIconSearch}"/>
+                                    </Button>
+                                </TextBox.InnerRightContent>
+                            </TextBox>
+                        </Grid>
+                        
+                        <Button Grid.Column="2" Background="Transparent" Padding="8" Margin="10,0,0,0" ToolTip.Tip="Shopping Cart">
+                            <Grid>
+                                <PathIcon Data="{StaticResource SemiIconCart}" Width="22" Height="22"/>
+                                <Border Background="#4361ee" CornerRadius="10" Width="18" Height="18" 
+                                        HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,-5,-5,0">
+                                    <TextBlock Text="3" FontSize="11" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                            </Grid>
+                        </Button>
+                    </Grid>
+                    
+                    <!-- Carousel -->
+                    <Carousel Grid.Row="1" Height="200" Margin="0,0,0,20">
+                        <Carousel.Styles>
+                            <Style Selector="Carousel#carousel:not(.no-transitions)">
+                                <Setter Property="PageTransition">
+                                    <PageSlide Duration="0.25" Orientation="Horizontal" />
+                                </Setter>
+                            </Style>
+                        </Carousel.Styles>
+                        
+                        <!-- Promo Slides -->
+                        <Border Background="#4895ef" CornerRadius="8">
+                            <Grid>
+                                <TextBlock Text="Special Offer - 20% Off All Yarns!" 
+                                           FontSize="24" 
+                                           FontWeight="Bold" 
+                                           HorizontalAlignment="Center" 
+                                           VerticalAlignment="Center"/>
+                            </Grid>
+                        </Border>
+                        <Border Background="#4361ee" CornerRadius="8">
+                            <Grid>
+                                <TextBlock Text="New Collection of Needles!" 
+                                           FontSize="24" 
+                                           FontWeight="Bold" 
+                                           HorizontalAlignment="Center" 
+                                           VerticalAlignment="Center"/>
+                            </Grid>
+                        </Border>
+                        <Border Background="#3a0ca3" CornerRadius="8">
+                            <Grid>
+                                <TextBlock Text="Free Shipping on Orders Over $50" 
+                                           FontSize="24" 
+                                           FontWeight="Bold" 
+                                           HorizontalAlignment="Center" 
+                                           VerticalAlignment="Center"/>
+                            </Grid>
+                        </Border>
+                        <Border Background="#7209b7" CornerRadius="8">
+                            <Grid>
+                                <TextBlock Text="Join Our Crochet Workshop!" 
+                                           FontSize="24" 
+                                           FontWeight="Bold" 
+                                           HorizontalAlignment="Center" 
+                                           VerticalAlignment="Center"/>
+                            </Grid>
+                        </Border>
+                    </Carousel>
+                    
+                    <!-- Category Title and Product Count -->
+                    <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,0,0,10" VerticalAlignment="Center">
+                        <TextBlock Text="All Products" FontSize="18" FontWeight="SemiBold"/>
+                        <Border Background="#23242a" CornerRadius="10" Padding="8,2" Margin="10,0,0,0">
+                            <TextBlock Text="6 items" FontSize="12" Opacity="0.7"/>
+                        </Border>
+                    </StackPanel>
+                    
+                    <!-- Products Grid -->
+                    <ScrollViewer Grid.Row="3" VerticalScrollBarVisibility="Auto">
+                        <WrapPanel Orientation="Horizontal" Margin="0,0,0,0">
+                            <!-- Product 1 -->
+                            <Border Background="#23242a" CornerRadius="8" Padding="15" Width="280" Height="220" Margin="0,0,10,10">
+                                <Grid RowDefinitions="Auto,Auto,*,Auto">
+                                    <TextBlock Grid.Row="0" Text="Ghem Premium" FontWeight="Bold" FontSize="18" Margin="0,0,0,8"/>
+                                    <TextBlock Grid.Row="1" Text="Premium quality yarn, perfect for sweaters and accessories" 
+                                               TextWrapping="Wrap" Opacity="0.7" Margin="0,0,0,15"/>
+                                    <Grid Grid.Row="2" ColumnDefinitions="*,Auto" Margin="0,0,0,15">
+                                        <StackPanel Grid.Column="0" Spacing="5">
+                                            <TextBlock Text="Price:" FontSize="14" Opacity="0.7"/>
+                                            <TextBlock Text="$12.99" FontWeight="SemiBold" FontSize="16"/>
+                                        </StackPanel>
+                                        <StackPanel Grid.Column="1" Spacing="5">
+                                            <TextBlock Text="Quantity:" FontSize="14" Opacity="0.7"/>
+                                            <TextBlock Text="25 available" FontWeight="SemiBold" FontSize="16"/>
+                                        </StackPanel>
+                                    </Grid>
+                                    <Button Grid.Row="3" Content="Add to Cart" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
+                                            Background="#4361ee" Foreground="White" Padding="0,8">
+                                        <Button.Styles>
+                                            <Style Selector="Button:pointerover /template/ ContentPresenter">
+                                                <Setter Property="Background" Value="#3a56d4"/>
+                                            </Style>
+                                        </Button.Styles>
+                                    </Button>
+                                </Grid>
+                            </Border>
+                            
+                            <!-- Product 2 -->
+                            <Border Background="#23242a" CornerRadius="8" Padding="15" Width="280" Height="220" Margin="0,0,10,10">
+                                <Grid RowDefinitions="Auto,Auto,*,Auto">
+                                    <TextBlock Grid.Row="0" Text="Ac de Tricotat" FontWeight="Bold" FontSize="18" Margin="0,0,0,8"/>
+                                    <TextBlock Grid.Row="1" Text="Professional knitting needles, sizes 3.5-5.0mm" 
+                                               TextWrapping="Wrap" Opacity="0.7" Margin="0,0,0,15"/>
+                                    <Grid Grid.Row="2" ColumnDefinitions="*,Auto" Margin="0,0,0,15">
+                                        <StackPanel Grid.Column="0" Spacing="5">
+                                            <TextBlock Text="Price:" FontSize="14" Opacity="0.7"/>
+                                            <TextBlock Text="$8.50" FontWeight="SemiBold" FontSize="16"/>
+                                        </StackPanel>
+                                        <StackPanel Grid.Column="1" Spacing="5">
+                                            <TextBlock Text="Quantity:" FontSize="14" Opacity="0.7"/>
+                                            <TextBlock Text="42 available" FontWeight="SemiBold" FontSize="16"/>
+                                        </StackPanel>
+                                    </Grid>
+                                    <Button Grid.Row="3" Content="Add to Cart" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
+                                            Background="#4361ee" Foreground="White" Padding="0,8">
+                                        <Button.Styles>
+                                            <Style Selector="Button:pointerover /template/ ContentPresenter">
+                                                <Setter Property="Background" Value="#3a56d4"/>
+                                            </Style>
+                                        </Button.Styles>
+                                    </Button>
+                                </Grid>
+                            </Border>
+                            
+                            <!-- Product 3 -->
+                            <Border Background="#23242a" CornerRadius="8" Padding="15" Width="280" Height="220" Margin="0,0,10,10">
+                                <Grid RowDefinitions="Auto,Auto,*,Auto">
+                                    <TextBlock Grid.Row="0" Text="Croseta Metalica" FontWeight="Bold" FontSize="18" Margin="0,0,0,8"/>
+                                    <TextBlock Grid.Row="1" Text="Metal crochet hooks, durable and smooth for easy crocheting" 
+                                               TextWrapping="Wrap" Opacity="0.7" Margin="0,0,0,15"/>
+                                    <Grid Grid.Row="2" ColumnDefinitions="*,Auto" Margin="0,0,0,15">
+                                        <StackPanel Grid.Column="0" Spacing="5">
+                                            <TextBlock Text="Price:" FontSize="14" Opacity="0.7"/>
+                                            <TextBlock Text="$6.99" FontWeight="SemiBold" FontSize="16"/>
+                                        </StackPanel>
+                                        <StackPanel Grid.Column="1" Spacing="5">
+                                            <TextBlock Text="Quantity:" FontSize="14" Opacity="0.7"/>
+                                            <TextBlock Text="18 available" FontWeight="SemiBold" FontSize="16"/>
+                                        </StackPanel>
+                                    </Grid>
+                                    <Button Grid.Row="3" Content="Add to Cart" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
+                                            Background="#4361ee" Foreground="White" Padding="0,8">
+                                        <Button.Styles>
+                                            <Style Selector="Button:pointerover /template/ ContentPresenter">
+                                                <Setter Property="Background" Value="#3a56d4"/>
+                                            </Style>
+                                        </Button.Styles>
+                                    </Button>
+                                </Grid>
+                            </Border>
+                            
+                            <!-- Product 4 -->
+                            <Border Background="#23242a" CornerRadius="8" Padding="15" Width="280" Height="220" Margin="0,0,10,10">
+                                <Grid RowDefinitions="Auto,Auto,*,Auto">
+                                    <TextBlock Grid.Row="0" Text="Ghem Bumbac" FontWeight="Bold" FontSize="18" Margin="0,0,0,8"/>
+                                    <TextBlock Grid.Row="1" Text="100% cotton yarn, soft and perfect for summer garments" 
+                                               TextWrapping="Wrap" Opacity="0.7" Margin="0,0,0,15"/>
+                                    <Grid Grid.Row="2" ColumnDefinitions="*,Auto" Margin="0,0,0,15">
+                                        <StackPanel Grid.Column="0" Spacing="5">
+                                            <TextBlock Text="Price:" FontSize="14" Opacity="0.7"/>
+                                            <TextBlock Text="$9.99" FontWeight="SemiBold" FontSize="16"/>
+                                        </StackPanel>
+                                        <StackPanel Grid.Column="1" Spacing="5">
+                                            <TextBlock Text="Quantity:" FontSize="14" Opacity="0.7"/>
+                                            <TextBlock Text="30 available" FontWeight="SemiBold" FontSize="16"/>
+                                        </StackPanel>
+                                    </Grid>
+                                    <Button Grid.Row="3" Content="Add to Cart" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
+                                            Background="#4361ee" Foreground="White" Padding="0,8">
+                                        <Button.Styles>
+                                            <Style Selector="Button:pointerover /template/ ContentPresenter">
+                                                <Setter Property="Background" Value="#3a56d4"/>
+                                            </Style>
+                                        </Button.Styles>
+                                    </Button>
+                                </Grid>
+                            </Border>
+                            
+                            <!-- Product 5 -->
+                            <Border Background="#23242a" CornerRadius="8" Padding="15" Width="280" Height="220" Margin="0,0,10,10">
+                                <Grid RowDefinitions="Auto,Auto,*,Auto">
+                                    <TextBlock Grid.Row="0" Text="Ac pentru Împletit" FontWeight="Bold" FontSize="18" Margin="0,0,0,8"/>
+                                    <TextBlock Grid.Row="1" Text="Fine needles for detailed work, comes in a set of 5" 
+                                               TextWrapping="Wrap" Opacity="0.7" Margin="0,0,0,15"/>
+                                    <Grid Grid.Row="2" ColumnDefinitions="*,Auto" Margin="0,0,0,15">
+                                        <StackPanel Grid.Column="0" Spacing="5">
+                                            <TextBlock Text="Price:" FontSize="14" Opacity="0.7"/>
+                                            <TextBlock Text="$14.50" FontWeight="SemiBold" FontSize="16"/>
+                                        </StackPanel>
+                                        <StackPanel Grid.Column="1" Spacing="5">
+                                            <TextBlock Text="Quantity:" FontSize="14" Opacity="0.7"/>
+                                            <TextBlock Text="15 available" FontWeight="SemiBold" FontSize="16"/>
+                                        </StackPanel>
+                                    </Grid>
+                                    <Button Grid.Row="3" Content="Add to Cart" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
+                                            Background="#4361ee" Foreground="White" Padding="0,8">
+                                        <Button.Styles>
+                                            <Style Selector="Button:pointerover /template/ ContentPresenter">
+                                                <Setter Property="Background" Value="#3a56d4"/>
+                                            </Style>
+                                        </Button.Styles>
+                                    </Button>
+                                </Grid>
+                            </Border>
+                            
+                            <!-- Product 6 -->
+                            <Border Background="#23242a" CornerRadius="8" Padding="15" Width="280" Height="220" Margin="0,0,10,10">
+                                <Grid RowDefinitions="Auto,Auto,*,Auto">
+                                    <TextBlock Grid.Row="0" Text="Croseta Lemn" FontWeight="Bold" FontSize="18" Margin="0,0,0,8"/>
+                                    <TextBlock Grid.Row="1" Text="Wooden crochet hooks, warm to the touch and beautifully crafted" 
+                                               TextWrapping="Wrap" Opacity="0.7" Margin="0,0,0,15"/>
+                                    <Grid Grid.Row="2" ColumnDefinitions="*,Auto" Margin="0,0,0,15">
+                                        <StackPanel Grid.Column="0" Spacing="5">
+                                            <TextBlock Text="Price:" FontSize="14" Opacity="0.7"/>
+                                            <TextBlock Text="$11.99" FontWeight="SemiBold" FontSize="16"/>
+                                        </StackPanel>
+                                        <StackPanel Grid.Column="1" Spacing="5">
+                                            <TextBlock Text="Quantity:" FontSize="14" Opacity="0.7"/>
+                                            <TextBlock Text="22 available" FontWeight="SemiBold" FontSize="16"/>
+                                        </StackPanel>
+                                    </Grid>
+                                    <Button Grid.Row="3" Content="Add to Cart" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
+                                            Background="#4361ee" Foreground="White" Padding="0,8">
+                                        <Button.Styles>
+                                            <Style Selector="Button:pointerover /template/ ContentPresenter">
+                                                <Setter Property="Background" Value="#3a56d4"/>
+                                            </Style>
+                                        </Button.Styles>
+                                    </Button>
+                                </Grid>
+                            </Border>
+                        </WrapPanel>
+                    </ScrollViewer>
+                </Grid>
+            </SplitView>
+        </Grid>
+    </Panel>
+</Window>

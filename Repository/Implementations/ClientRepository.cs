@@ -1,13 +1,17 @@
-using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
 using System;
+using System.Linq;
+using magazin_mercerie;
 
 public class ClientRepository : Repository<Client>, IClientRepository
 {
-    public ClientRepository(AppDbContext context) : base(context)
+    private readonly magazin_mercerie.AppDbContext _context;
+
+    public ClientRepository(magazin_mercerie.AppDbContext context) : base(context)
     {
+        _context = context;
     }
 
     public async Task<List<Client>> GetByNumeAsync(string nume)
@@ -15,14 +19,19 @@ public class ClientRepository : Repository<Client>, IClientRepository
         return await GetDbSet().Where(c => c.Nume == nume).ToListAsync();
     }
 
-    public async Task<List<Client>> GetByEmailAsync(string email)
-    {
-        return await GetDbSet().Where(c => c.Email == email).ToListAsync();
-    }
-
     public async Task<List<Client>> GetByTelefonAsync(string telefon)
     {
         return await GetDbSet().Where(c => c.Telefon == telefon).ToListAsync();
+    }
+
+    public async Task<User?> GetByUsernameAsync(string username)
+    {
+        return await GetDbSet().FirstOrDefaultAsync(c => c.Username == username);
+    }
+
+    public async Task<User?> GetByEmailAsync(string email)
+    {
+        return await GetDbSet().FirstOrDefaultAsync(c => c.Email == email);
     }
 
     public override async Task<Client> AddAsync(Client entity)
@@ -32,6 +41,7 @@ public class ClientRepository : Repository<Client>, IClientRepository
             throw new ArgumentNullException(nameof(entity));
         }
         await GetDbSet().AddAsync(entity);
+        await SaveChangesAsync();
         return entity;
     }
 
@@ -45,14 +55,10 @@ public class ClientRepository : Repository<Client>, IClientRepository
 
     public override async Task<Client> UpdateAsync(Client entity)
     {
-        if (entity == null)
-        {
-            throw new ArgumentNullException(nameof(entity));
-        }
-        GetDbSet().Update(entity);
-        await SaveChangesAsync();
+        _context.Entry(entity).State = EntityState.Modified;
+        await _context.SaveChangesAsync();
         return entity;
-    }    
+    }
 
     public override async Task<List<Client>> GetAllAsync()
     {
@@ -66,7 +72,6 @@ public class ClientRepository : Repository<Client>, IClientRepository
 
     public override async Task<bool> SaveChangesAsync()
     {
-        return await base.SaveChangesAsync();
+        return await _context.SaveChangesAsync() > 0;
     }
 }
-

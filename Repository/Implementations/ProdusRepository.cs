@@ -3,10 +3,11 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System;
+using magazin_mercerie;
 
 public class ProdusRepository : Repository<Produs>, IProdusRepository
 {
-    public ProdusRepository(AppDbContext context) : base(context)
+    public ProdusRepository(magazin_mercerie.AppDbContext context) : base(context)
     {
     }
 
@@ -30,6 +31,11 @@ public class ProdusRepository : Repository<Produs>, IProdusRepository
         return await GetDbSet().Where(p => p.Cantitate == cantitate).ToListAsync();
     }
 
+    public async Task<List<Produs>> GetByIdsAsync(List<Guid> ids)
+    {
+        return await GetDbSet().Where(p => ids.Contains(p.Id)).ToListAsync();
+    }
+
     public override async Task<Produs> AddAsync(Produs entity)
     {
         if (entity == null)
@@ -37,6 +43,7 @@ public class ProdusRepository : Repository<Produs>, IProdusRepository
             throw new ArgumentNullException(nameof(entity));
         }
         await GetDbSet().AddAsync(entity);
+        await SaveChangesAsync();
         return entity;
     }
 

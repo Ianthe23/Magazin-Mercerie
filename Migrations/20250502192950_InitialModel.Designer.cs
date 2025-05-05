@@ -4,12 +4,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using magazin_mercerie;
 
 #nullable disable
 
 namespace magazinmercerie.Migrations
 {
-    [DbContext(typeof(AppDbContext))]
+    [DbContext(typeof(magazin_mercerie.AppDbContext))]
     [Migration("20250502192950_InitialModel")]
     partial class InitialModel
     {

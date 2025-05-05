@@ -1,0 +1,42 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:magazin_mercerie.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="magazin_mercerie.Views.LoginViews.LoginAngajatView"
+        x:DataType="vm:LoginAngajatViewModel">
+
+    <Design.DataContext>
+        <!-- This only sets the DataContext for the previewer in an IDE,
+             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
+        <vm:LoginAngajatViewModel/>
+    </Design.DataContext>
+
+    <StackPanel Width="300">
+        <StackPanel Margin="20">
+            <HyperlinkButton Click="LoginClientCommand" Margin="0,0,0,20" FontSize="12">
+                <StackPanel Orientation="Horizontal">
+                    <PathIcon Data="{StaticResource SemiIconUndo}" Width="12" Height="12" Margin="0,0,5,0"/>
+                    <TextBlock Text="Go back to client login."/>
+                </StackPanel>
+            </HyperlinkButton>
+            <TextBlock FontSize="24" FontWeight="Bold" Margin="0,0,0,20">
+                <Run Text="Login for" />
+                <Run Text="employees" TextDecorations="Underline" />
+            </TextBlock>
+            <TextBox Text="{Binding Username}" Watermark="Username" Margin="0,0,0,10"/>
+            <Grid Margin="0,0,0,10">
+                <TextBox Name="PasswordBox" Text="{Binding Password}" Watermark="Password" PasswordChar="*" />
+                <Button HorizontalAlignment="Right" Background="Transparent" BorderThickness="0" Click="TogglePasswordVisibility">
+                    <PathIcon Data="{StaticResource SemiIconEyeClosedSolid}" Width="16" Height="16"/>
+                </Button>
+            </Grid>
+            <StackPanel Orientation="Horizontal" Margin="0,20,0,0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <Button Content="Login" Command="{Binding LoginCommand}" Margin="0,0,10,0" Width="125" />
+                <Button Content="Register" Click="RegisterAngajatCommand" Margin="0,0,0,0" Width="125" />
+            </StackPanel>
+        </StackPanel>
+    </StackPanel>
+
+</UserControl>

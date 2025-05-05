@@ -1,0 +1,1 @@
+DELETE from Utilizatori where Nume = 'David';

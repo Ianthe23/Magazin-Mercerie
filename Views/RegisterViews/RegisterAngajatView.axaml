@@ -1,0 +1,59 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:magazin_mercerie.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:conv="using:Avalonia.Data.Converters"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="magazin_mercerie.Views.RegisterViews.RegisterAngajatView"
+        x:DataType="vm:RegisterAngajatViewModel">
+
+    <Design.DataContext>
+        <!-- This only sets the DataContext for the previewer in an IDE,
+             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
+        <vm:RegisterAngajatViewModel/>
+    </Design.DataContext>
+
+    <StackPanel Width="300">
+        <StackPanel Margin="20">
+            <HyperlinkButton Click="LoginAngajatCommand" Margin="0,0,0,20" FontSize="12">
+                <StackPanel Orientation="Horizontal">
+                    <PathIcon Data="{StaticResource SemiIconUndo}" Width="12" Height="12" Margin="0,0,5,0"/>
+                    <TextBlock Text="Go back to employee login."/>
+                </StackPanel>
+            </HyperlinkButton>
+            <TextBlock FontSize="24" FontWeight="Bold" Margin="0,0,0,20">
+                <Run Text="Register as" />
+                <Run Text="employee" TextDecorations="Underline" />
+            </TextBlock>
+            <TextBox Text="{Binding Name}" Watermark="Name" Margin="0,0,0,10"/>
+            <TextBox Text="{Binding Email}" Watermark="Email" Margin="0,0,0,10"/>
+            <TextBox Text="{Binding Username}" Watermark="Username" Margin="0,0,0,10"/>
+            <Grid Margin="0,0,0,10">
+                <TextBox Name="PasswordBox" Text="{Binding Password}" Watermark="Password" PasswordChar="*" />
+                <Button HorizontalAlignment="Right" Background="Transparent" BorderThickness="0" Click="TogglePasswordVisibility">
+                    <PathIcon Data="{StaticResource SemiIconEyeClosedSolid}" Width="16" Height="16"/>
+                </Button>
+            </Grid>
+            <TextBox Text="{Binding Phone}" Watermark="Phone" Margin="0,0,0,10"/>
+            <ComboBox ItemsSource="{Binding TipAngajatOptions}" 
+                     SelectedItem="{Binding SelectedTipAngajat}"
+                     HorizontalAlignment="Stretch"
+                     Margin="0,0,0,10"/>
+            <TextBlock Text="{Binding ErrorMessage}" 
+                      Foreground="Red" 
+                      Margin="0,10,0,0" 
+                      IsVisible="{Binding ErrorMessage, Converter={x:Static conv:StringConverters.IsNotNullOrEmpty}}"
+                      TextWrapping="Wrap" />
+            <Button Content="Register" Command="{Binding RegisterCommand}" 
+                    Margin="0,20,0,0" 
+                    HorizontalAlignment="Stretch"
+                    HorizontalContentAlignment="Center" />
+            <ProgressBar IsIndeterminate="True" 
+                        IsVisible="{Binding IsLoading}" 
+                        Margin="0,10,0,0"
+                        HorizontalAlignment="Stretch" />
+        </StackPanel>
+    </StackPanel>
+
+</UserControl>

@@ -1,0 +1,16 @@
+[5/5/2025 6:26:51 PM] Application Initialize() called
+[5/5/2025 6:26:51 PM] ConfigureLogging() called
+[5/5/2025 6:26:51 PM] Logging configured successfully
+[5/5/2025 6:26:52 PM] OnFrameworkInitializationCompleted() called
+[5/5/2025 6:26:52 PM] Application starting up (direct log)
+[5/5/2025 6:26:52 PM] Setting up dependency injection
+[5/5/2025 6:26:52 PM] Configuring database context
+[5/5/2025 6:26:52 PM] Registering repositories
+[5/5/2025 6:26:52 PM] Registering service layer
+[5/5/2025 6:26:52 PM] Building service provider
+[5/5/2025 6:26:52 PM] Initializing database
+[5/5/2025 6:26:52 PM] Database created successfully
+[5/5/2025 6:26:52 PM] Validation disabled successfully
+[5/5/2025 6:26:52 PM] Creating LoginWindow
+[5/5/2025 6:26:52 PM] LoginWindow created successfully
+[5/5/2025 6:28:01 PM] Application shutting down

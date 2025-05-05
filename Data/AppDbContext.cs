@@ -1,57 +1,73 @@
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
 
-public class AppDbContext : DbContext
+namespace magazin_mercerie
 {
-    public DbSet<Produs> Produse { get; set; }
-    public DbSet<Comanda> Comenzi { get; set; }
-    public DbSet<Client> Clienti { get; set; }
-    public DbSet<Angajat> Angajati { get; set; }
-    public DbSet<AngajatMagazin> AngajatiMagazin { get; set; }
-    public DbSet<Patron> Patroni { get; set; }
-    public DbSet<User> Utilizatori { get; set; }
-
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    public class AppDbContext : DbContext
     {
-        optionsBuilder.UseSqlite("Data Source=magazin-mercerie.db");
-    }
+        public DbSet<Produs> Produse { get; set; }
+        public DbSet<Comanda> Comenzi { get; set; }
+        public DbSet<Client> Clienti { get; set; }
+        public DbSet<Angajat> Angajati { get; set; }
+        public DbSet<AngajatMagazin> AngajatiMagazin { get; set; }
+        public DbSet<Patron> Patroni { get; set; }
+        public DbSet<User> Utilizatori { get; set; }
 
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
-    {   
-        base.OnModelCreating(modelBuilder);
-        modelBuilder.Entity<Produs>()
-            .HasKey(p => p.Id);
-
-        modelBuilder.Entity<Comanda>()
-            .HasKey(c => c.Id);
+        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
+        {
+        }
         
-        modelBuilder.Entity<Comanda>()
-            .HasOne(c => c.Client)
-            .WithMany(c => c.Comenzi)
-            .HasForeignKey(c => c.ClientId);
+        public AppDbContext() 
+        {
+        }
 
-        modelBuilder.Entity<Comanda>()
-            .HasOne(c => c.Angajat)
-            .WithMany(a => a.Comenzi)
-            .HasForeignKey(c => c.AngajatId);
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+                optionsBuilder.UseSqlite("Data Source=magazin-mercerie.db");
+            }
+        }
 
-        modelBuilder.Entity<Comanda>()
-            .HasMany(c => c.Produse)
-            .WithMany()
-            .UsingEntity(j => j.ToTable("ComandaProduse"));
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {   
+            base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<Produs>()
+                .HasKey(p => p.Id);
 
-        // modelBuilder.Entity<Client>()
-        //     .HasKey(c => c.Id);
+            modelBuilder.Entity<Comanda>()
+                .HasKey(c => c.Id);
+            
+            modelBuilder.Entity<Comanda>()
+                .HasOne(c => c.Client)
+                .WithMany(c => c.Comenzi)
+                .HasForeignKey(c => c.ClientId);
 
-        // modelBuilder.Entity<Angajat>()
-        //     .HasKey(a => a.Id);
+            modelBuilder.Entity<Comanda>()
+                .HasOne(c => c.Angajat)
+                .WithMany(a => a.Comenzi)
+                .HasForeignKey(c => c.AngajatId);
 
-        // modelBuilder.Entity<AngajatMagazin>()
-        //     .HasKey(a => a.Id);
+            modelBuilder.Entity<Comanda>()
+                .HasMany(c => c.Produse)
+                .WithMany()
+                .UsingEntity(j => j.ToTable("ComandaProduse"));
 
-        // modelBuilder.Entity<Patron>()
-        //     .HasKey(p => p.Id);
+            // modelBuilder.Entity<Client>()
+            //     .HasKey(c => c.Id);
 
-        modelBuilder.Entity<User>()
-            .HasKey(u => u.Id);
+            // modelBuilder.Entity<Angajat>()
+            //     .HasKey(a => a.Id);
+
+            // modelBuilder.Entity<AngajatMagazin>()
+            //     .HasKey(a => a.Id);
+
+            // modelBuilder.Entity<Patron>()
+            //     .HasKey(p => p.Id);
+
+            modelBuilder.Entity<User>()
+                .HasKey(u => u.Id);
+        }
     }
 }

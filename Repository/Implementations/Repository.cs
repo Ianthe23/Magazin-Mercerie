@@ -2,12 +2,13 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using System;
+using magazin_mercerie;
 
 public class Repository<T> : IRepository<T> where T : class
 {
-    private readonly AppDbContext _context;
+    private readonly magazin_mercerie.AppDbContext _context;
 
-    public Repository(AppDbContext context)
+    public Repository(magazin_mercerie.AppDbContext context)
     {
         _context = context;
     }

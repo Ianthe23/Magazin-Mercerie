@@ -3,12 +3,13 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using magazin_mercerie;
 
 #nullable disable
 
 namespace magazinmercerie.Migrations
 {
-    [DbContext(typeof(AppDbContext))]
+    [DbContext(typeof(magazin_mercerie.AppDbContext))]
     partial class AppDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

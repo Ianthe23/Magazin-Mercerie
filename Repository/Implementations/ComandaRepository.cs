@@ -3,10 +3,11 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System;
+using magazin_mercerie;
 
 public class ComandaRepository : Repository<Comanda>, IComandaRepository
 {
-    public ComandaRepository(AppDbContext context) : base(context)
+    public ComandaRepository(magazin_mercerie.AppDbContext context) : base(context)
     {
     }
 
@@ -32,6 +33,7 @@ public class ComandaRepository : Repository<Comanda>, IComandaRepository
             throw new ArgumentNullException(nameof(entity));
         }
         await GetDbSet().AddAsync(entity);
+        await SaveChangesAsync();
         return entity;
     }
 

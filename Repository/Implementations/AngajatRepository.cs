@@ -1,28 +1,37 @@
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System;
+using System.Threading.Tasks;
+using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
+using magazin_mercerie;
 
 public class AngajatRepository : Repository<Angajat>, IAngajatRepository
 {
-    public AngajatRepository(AppDbContext context) : base(context)
-    {
-    }
+    private readonly magazin_mercerie.AppDbContext _context;
 
-    public async Task<List<Angajat>> GetByNumeAsync(string nume)
+    public AngajatRepository(magazin_mercerie.AppDbContext context) : base(context)
     {
-        return await GetDbSet().Where(a => a.Nume == nume).ToListAsync();
-    }
-
-    public async Task<List<Angajat>> GetByEmailAsync(string email)
-    {
-        return await GetDbSet().Where(a => a.Email == email).ToListAsync();
+        _context = context;
     }
 
     public async Task<List<Angajat>> GetBySalariuAsync(int salariu)
     {
         return await GetDbSet().Where(a => a.Salariu == salariu).ToListAsync();
+    }
+
+    public async Task<List<AngajatMagazin>> GetByTipAsync(TipAngajat tip)
+    {
+        return await GetDbSet().Where(a => a.Tip == tip).Cast<AngajatMagazin>().ToListAsync();
+    }
+
+    public async Task<User?> GetByUsernameAsync(string username)
+    {
+        return await GetDbSet().FirstOrDefaultAsync(a => a.Username == username);
+    }
+
+    public async Task<User?> GetByEmailAsync(string email)
+    {
+        return await GetDbSet().FirstOrDefaultAsync(a => a.Email == email);
     }
 
     public override async Task<Angajat> AddAsync(Angajat entity)
@@ -32,6 +41,7 @@ public class AngajatRepository : Repository<Angajat>, IAngajatRepository
             throw new ArgumentNullException(nameof(entity));
         }
         await GetDbSet().AddAsync(entity);
+        await SaveChangesAsync();
         return entity;
     }
 
@@ -45,12 +55,8 @@ public class AngajatRepository : Repository<Angajat>, IAngajatRepository
 
     public override async Task<Angajat> UpdateAsync(Angajat entity)
     {
-        if (entity == null)
-        {
-            throw new ArgumentNullException(nameof(entity));
-        }
-        GetDbSet().Update(entity);
-        await SaveChangesAsync();
+        _context.Entry(entity).State = EntityState.Modified;
+        await _context.SaveChangesAsync();
         return entity;
     }
 
@@ -66,7 +72,7 @@ public class AngajatRepository : Repository<Angajat>, IAngajatRepository
 
     public override async Task<bool> SaveChangesAsync()
     {
-        return await base.SaveChangesAsync();
+        return await _context.SaveChangesAsync() > 0;
     }
-}
 
+}
