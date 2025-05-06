@@ -54,18 +54,6 @@ namespace magazin_mercerie
                 .WithMany()
                 .UsingEntity(j => j.ToTable("ComandaProduse"));
 
-            // modelBuilder.Entity<Client>()
-            //     .HasKey(c => c.Id);
-
-            // modelBuilder.Entity<Angajat>()
-            //     .HasKey(a => a.Id);
-
-            // modelBuilder.Entity<AngajatMagazin>()
-            //     .HasKey(a => a.Id);
-
-            // modelBuilder.Entity<Patron>()
-            //     .HasKey(p => p.Id);
-
             modelBuilder.Entity<User>()
                 .HasKey(u => u.Id);
         }
