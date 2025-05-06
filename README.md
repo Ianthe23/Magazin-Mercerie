@@ -16,25 +16,25 @@ This application helps manage a mercerie shop's operations, including:
 
 ### 🔑 Login Client Window
 
-<img src="Screenshots/login-client.webp" alt="Login Client Window">
+<img src="Screenshots/login-client.webp" alt="Login Client Window" width="600" style="display: block; margin: auto;">
 
 **Description**: The client login interface featuring a clean, modern design with username and password fields. The interface includes validation feedback and a visually appealing layout following Avalonia UI design principles.
 
 ### 👤 Register Employee Window
 
-<img src="Screenshots/register-angajat.webp" alt="Register Angajat Window">
+<img src="Screenshots/register-angajat.webp" alt="Register Angajat Window" width="600" style="display: block; margin: auto;">
 
 **Description**: Employee registration form with fields for personal information and account credentials. The form includes validation and follows the same design language as the rest of the application for a consistent user experience.
 
 ### 🏠 Client Main Window
 
-<img src="Screenshots/main-client-window.webp" alt="Client Main Window">
+<img src="Screenshots/main-client-window.webp" alt="Client Main Window" width="600" style="display: block; margin: auto;">
 
 **Description**: The main client dashboard displaying product catalog, order history, and shopping cart. The interface allows clients to browse products, place orders, and manage their account information in a user-friendly environment.
 
 ### 📚 Sidebar
 
-<img src="Screenshots/sidebar.webp" alt="Sidebar">
+<img src="Screenshots/sidebar.webp" alt="Sidebar" width="600" style="display: block; margin: auto;">
 
 **Description**: Navigation sidebar providing quick access to all main application features. The collapsible design maximizes screen space while maintaining accessibility to core functionality through intuitive icons and labels.
 
