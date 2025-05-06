@@ -207,7 +207,7 @@ public partial class LoginClientViewModel : ViewModelBase
                 Console.WriteLine($"Login failed for user: {Username}");
                 
                 // Show error popup for login failures
-                await ShowMessageBoxAsync("Login Failed", "Invalid username or password. Please try again.");
+                // await ShowMessageBoxAsync("Login Failed", "Invalid username or password. Please try again.");
             }
         }
         catch (Exception ex)

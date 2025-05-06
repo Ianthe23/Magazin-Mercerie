@@ -14,6 +14,13 @@
         <vm:RegisterAngajatViewModel/>
     </Design.DataContext>
 
+    <UserControl.Styles>
+        <Style Selector="TextBox.error">
+            <Setter Property="BorderBrush" Value="Red"/>
+            <Setter Property="BorderThickness" Value="2"/>
+        </Style>
+    </UserControl.Styles>
+
     <StackPanel Width="300">
         <StackPanel Margin="20">
             <HyperlinkButton Click="LoginAngajatCommand" Margin="0,0,0,20" FontSize="12">
@@ -26,16 +33,16 @@
                 <Run Text="Register as" />
                 <Run Text="employee" TextDecorations="Underline" />
             </TextBlock>
-            <TextBox Text="{Binding Name}" Watermark="Name" Margin="0,0,0,10"/>
-            <TextBox Text="{Binding Email}" Watermark="Email" Margin="0,0,0,10"/>
-            <TextBox Text="{Binding Username}" Watermark="Username" Margin="0,0,0,10"/>
+            <TextBox Text="{Binding Name}" Watermark="Name" Margin="0,0,0,10" Classes.error="{Binding NameHasError}"/>
+            <TextBox Text="{Binding Email}" Watermark="Email" Margin="0,0,0,10" Classes.error="{Binding EmailHasError}"/>
+            <TextBox Text="{Binding Username}" Watermark="Username" Margin="0,0,0,10" Classes.error="{Binding UsernameHasError}"/>
             <Grid Margin="0,0,0,10">
-                <TextBox Name="PasswordBox" Text="{Binding Password}" Watermark="Password" PasswordChar="*" />
+                <TextBox Name="PasswordBox" Text="{Binding Password}" Watermark="Password" PasswordChar="*" Classes.error="{Binding PasswordHasError}" />
                 <Button HorizontalAlignment="Right" Background="Transparent" BorderThickness="0" Click="TogglePasswordVisibility">
                     <PathIcon Data="{StaticResource SemiIconEyeClosedSolid}" Width="16" Height="16"/>
                 </Button>
             </Grid>
-            <TextBox Text="{Binding Phone}" Watermark="Phone" Margin="0,0,0,10"/>
+            <TextBox Text="{Binding Phone}" Watermark="Phone" Margin="0,0,0,10" Classes.error="{Binding PhoneHasError}"/>
             <ComboBox ItemsSource="{Binding TipAngajatOptions}" 
                      SelectedItem="{Binding SelectedTipAngajat}"
                      HorizontalAlignment="Stretch"
@@ -44,6 +51,11 @@
                       Foreground="Red" 
                       Margin="0,10,0,0" 
                       IsVisible="{Binding ErrorMessage, Converter={x:Static conv:StringConverters.IsNotNullOrEmpty}}"
+                      TextWrapping="Wrap" />
+            <TextBlock Text="{Binding SuccessMessage}" 
+                      Foreground="Green" 
+                      Margin="0,10,0,0" 
+                      IsVisible="{Binding SuccessMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
                       TextWrapping="Wrap" />
             <Button Content="Register" Command="{Binding RegisterCommand}" 
                     Margin="0,20,0,0" 

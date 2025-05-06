@@ -245,16 +245,16 @@ public partial class RegisterClientViewModel : ViewModelBase
             {
                 ErrorMessage = "Registration failed";
                 _logger.Warn($"Failed to register client: {Username}");
-                await ShowMessageBoxAsync("Registration Failed", 
-                    "Registration failed. Please try again or contact support.");
+                // await ShowMessageBoxAsync("Registration Failed", 
+                //     "Registration failed. Please try again or contact support.");
             }
         }
         catch (Exception ex)
         {
             ErrorMessage = $"Registration error: {ex.Message}";
             _logger.Error($"Registration error: {ex.Message}", ex);
-            await ShowMessageBoxAsync("Registration Error", 
-                $"An error occurred during registration: {ex.Message}");
+            // await ShowMessageBoxAsync("Registration Error", 
+            //     $"An error occurred during registration: {ex.Message}");
         }
         finally
         {
@@ -289,56 +289,56 @@ public partial class RegisterClientViewModel : ViewModelBase
         return phone.Length == 10 && phone.All(char.IsDigit);
     }
     
-    private async Task ShowMessageBoxAsync(string title, string message)
-    {
-        try
-        {
-            var currentWindow = GetCurrentWindow();
-            if (currentWindow != null)
-            {
-                var messageBox = new Avalonia.Controls.Window
-                {
-                    Title = title,
-                    Width = 400,
-                    Height = 200,
-                    WindowStartupLocation = WindowStartupLocation.CenterOwner,
-                    Content = new StackPanel
-                    {
-                        Margin = new Avalonia.Thickness(20),
-                        Children =
-                        {
-                            new TextBlock
-                            {
-                                Text = message,
-                                TextWrapping = Avalonia.Media.TextWrapping.Wrap,
-                                Margin = new Avalonia.Thickness(0, 0, 0, 20)
-                            },
-                            new Button
-                            {
-                                Content = "OK",
-                                HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center,
-                                Width = 80
-                            }
-                        }
-                    }
-                };
+    // private async Task ShowMessageBoxAsync(string title, string message)
+    // {
+    //     try
+    //     {
+    //         var currentWindow = GetCurrentWindow();
+    //         if (currentWindow != null)
+    //         {
+    //             var messageBox = new Avalonia.Controls.Window
+    //             {
+    //                 Title = title,
+    //                 Width = 400,
+    //                 Height = 200,
+    //                 WindowStartupLocation = WindowStartupLocation.CenterOwner,
+    //                 Content = new StackPanel
+    //                 {
+    //                     Margin = new Avalonia.Thickness(20),
+    //                     Children =
+    //                     {
+    //                         new TextBlock
+    //                         {
+    //                             Text = message,
+    //                             TextWrapping = Avalonia.Media.TextWrapping.Wrap,
+    //                             Margin = new Avalonia.Thickness(0, 0, 0, 20)
+    //                         },
+    //                         new Button
+    //                         {
+    //                             Content = "OK",
+    //                             HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center,
+    //                             Width = 80
+    //                         }
+    //                     }
+    //                 }
+    //             };
 
-                // Handle the button click to close the message box
-                if (messageBox.Content is StackPanel panel &&
-                    panel.Children.Count > 1 &&
-                    panel.Children[1] is Button button)
-                {
-                    button.Click += (sender, e) => messageBox.Close();
-                }
+    //             // Handle the button click to close the message box
+    //             if (messageBox.Content is StackPanel panel &&
+    //                 panel.Children.Count > 1 &&
+    //                 panel.Children[1] is Button button)
+    //             {
+    //                 button.Click += (sender, e) => messageBox.Close();
+    //             }
 
-                // Show the dialog
-                await messageBox.ShowDialog(currentWindow);
-            }
-        }
-        catch (Exception ex)
-        {
-            _logger.Error($"Error showing message box: {ex.Message}", ex);
-            Console.WriteLine($"Error showing message box: {ex.Message}");
-        }
-    }
+    //             // Show the dialog
+    //             await messageBox.ShowDialog(currentWindow);
+    //         }
+    //     }
+    //     catch (Exception ex)
+    //     {
+    //         _logger.Error($"Error showing message box: {ex.Message}", ex);
+    //         Console.WriteLine($"Error showing message box: {ex.Message}");
+    //     }
+    // }
 }
