@@ -1,1 +1,1 @@
-DELETE from Utilizatori where Nume = 'David';
+SELECT * FROM Utilizatori;
