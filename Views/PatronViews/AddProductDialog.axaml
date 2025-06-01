@@ -1,0 +1,118 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="500" d:DesignHeight="500"
+        x:Class="magazin_mercerie.Views.PatronViews.AddProductDialog"
+        Title="Add New Product"
+        Width="500" Height="500"
+        WindowStartupLocation="CenterOwner"
+        CanResize="False"
+        SystemDecorations="BorderOnly"
+        TransparencyLevelHint="AcrylicBlur"
+        Background="Transparent"
+        ExtendClientAreaToDecorationsHint="True">
+
+    <Panel>
+        <ExperimentalAcrylicBorder IsHitTestVisible="False">
+            <ExperimentalAcrylicBorder.Material>
+                <ExperimentalAcrylicMaterial
+                    BackgroundSource="Digger"
+                    TintColor="Black"
+                    TintOpacity="1"
+                    MaterialOpacity="0.8" />
+            </ExperimentalAcrylicBorder.Material>
+        </ExperimentalAcrylicBorder>
+
+        <Grid RowDefinitions="Auto,*,Auto" Margin="20">
+            <!-- Header -->
+            <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Margin="0,0,0,20">
+                <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="15">
+                    <PathIcon Data="{StaticResource SemiIconStar}" Width="24" Height="24" Foreground="#4361ee"/>
+                    <TextBlock Text="Add New Product" FontSize="20" FontWeight="Bold" VerticalAlignment="Center"/>
+                </StackPanel>
+                
+                <Button Grid.Column="1" Background="Transparent" Padding="8" Click="CloseDialog" ToolTip.Tip="Close">
+                    <PathIcon Data="{StaticResource SemiIconClose}" Width="16" Height="16"/>
+                </Button>
+            </Grid>
+
+            <!-- Form Content -->
+            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                <StackPanel Spacing="20">
+                    <!-- Name Field -->
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="Product Name *" FontWeight="SemiBold"/>
+                        <TextBox Name="NameTextBox" Watermark="Enter product name" Padding="12"/>
+                        <TextBlock Name="NameError" Text="" Foreground="#e74c3c" FontSize="12" IsVisible="False"/>
+                    </StackPanel>
+
+                    <!-- Price Field -->
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="Price *" FontWeight="SemiBold"/>
+                        <NumericUpDown Name="PriceNumericUpDown" 
+                                       Minimum="0" Maximum="10000" Value="0" 
+                                       FormatString="C2" Increment="0.50"
+                                       Padding="12"/>
+                        <TextBlock Name="PriceError" Text="" Foreground="#e74c3c" FontSize="12" IsVisible="False"/>
+                    </StackPanel>
+
+                    <!-- Stock Field -->
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="Initial Stock *" FontWeight="SemiBold"/>
+                        <NumericUpDown Name="StockNumericUpDown" 
+                                       Minimum="0" Maximum="1000" Value="0" 
+                                       FormatString="N0" Increment="1"
+                                       Padding="12"/>
+                        <TextBlock Name="StockError" Text="" Foreground="#e74c3c" FontSize="12" IsVisible="False"/>
+                    </StackPanel>
+
+                    <!-- Category Field -->
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="Category *" FontWeight="SemiBold"/>
+                        <ComboBox Name="CategoryComboBox" Padding="12" SelectedIndex="0">
+                            <ComboBoxItem Content="Ghem" Tag="Ghem"/>
+                            <ComboBoxItem Content="Croseta" Tag="Croseta"/>
+                            <ComboBoxItem Content="AlteProduse" Tag="AlteProduse"/>
+                        </ComboBox>
+                    </StackPanel>
+
+                    <!-- Loading Indicator -->
+                    <StackPanel Name="LoadingPanel" Orientation="Horizontal" Spacing="10" IsVisible="False">
+                        <TextBlock Text="Creating product..." VerticalAlignment="Center"/>
+                        <ProgressBar IsIndeterminate="True" Width="100" Height="6"/>
+                    </StackPanel>
+
+                    <!-- Error Message -->
+                    <Border Name="ErrorPanel" Background="#e74c3c" CornerRadius="6" Padding="12" IsVisible="False">
+                        <TextBlock Name="ErrorMessage" Text="" TextWrapping="Wrap" Foreground="White"/>
+                    </Border>
+
+                    <!-- Success Message -->
+                    <Border Name="SuccessPanel" Background="#27ae60" CornerRadius="6" Padding="12" IsVisible="False">
+                        <TextBlock Name="SuccessMessage" Text="" TextWrapping="Wrap" Foreground="White"/>
+                    </Border>
+                </StackPanel>
+            </ScrollViewer>
+
+            <!-- Action Buttons -->
+            <Grid Grid.Row="2" ColumnDefinitions="*,Auto,Auto" Margin="0,20,0,0">
+                <TextBlock Grid.Column="0" Text="* Required fields" FontSize="12" Opacity="0.7" VerticalAlignment="Center"/>
+                
+                <Button Grid.Column="1" Content="Cancel" Padding="20,10" Margin="0,0,10,0" 
+                        Background="Transparent" BorderBrush="#666" BorderThickness="1"
+                        Click="CloseDialog"/>
+                
+                <Button Grid.Column="2" Content="Create Product" Padding="20,10" 
+                        Background="#4361ee" Foreground="White"
+                        Click="CreateProductAsync">
+                    <Button.Styles>
+                        <Style Selector="Button:pointerover /template/ ContentPresenter">
+                            <Setter Property="Background" Value="#3a56d4"/>
+                        </Style>
+                    </Button.Styles>
+                </Button>
+            </Grid>
+        </Grid>
+    </Panel>
+</Window> 

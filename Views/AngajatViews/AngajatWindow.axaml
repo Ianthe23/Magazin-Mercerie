@@ -1,0 +1,407 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:magazin_mercerie.ViewModels"
+        xmlns:models="using:magazin_mercerie.Models.Enum"
+        xmlns:sys="clr-namespace:System;assembly=System.Runtime"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="800"
+        x:Class="magazin_mercerie.Views.AngajatViews.AngajatWindow"
+        x:DataType="vm:AngajatViewModel"
+        Title="Merceria - Employee Dashboard"
+        TransparencyLevelHint="AcrylicBlur"
+        Background="Transparent"
+        ExtendClientAreaToDecorationsHint="True">
+
+    <Panel>
+        <ExperimentalAcrylicBorder IsHitTestVisible="False">
+            <ExperimentalAcrylicBorder.Material>
+                <ExperimentalAcrylicMaterial
+                    BackgroundSource="Digger"
+                    TintColor="Black"
+                    TintOpacity="1"
+                    MaterialOpacity="0.65" />
+            </ExperimentalAcrylicBorder.Material>
+        </ExperimentalAcrylicBorder>
+
+        <Grid RowDefinitions="Auto,*">
+            <!-- Header Section -->
+            <Border Grid.Row="0" Background="#1e1e1e" Margin="10,10,10,0" CornerRadius="8">
+                <Grid ColumnDefinitions="Auto,*,Auto" Margin="20,15">
+                    <!-- Employee Info -->
+                    <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="15" VerticalAlignment="Center">
+                        <Border Background="#4361ee" CornerRadius="25" Width="50" Height="50">
+                            <TextBlock Text="{Binding CurrentEmployeeInitial}" 
+                                       FontWeight="Bold" 
+                                       FontSize="20" 
+                                       HorizontalAlignment="Center" 
+                                       VerticalAlignment="Center"
+                                       Foreground="White"/>
+                        </Border>
+                        <StackPanel>
+                            <TextBlock Text="{Binding CurrentEmployeeName}" 
+                                       FontWeight="SemiBold" 
+                                       FontSize="18"
+                                       Foreground="White"/>
+                            <TextBlock Text="Employee Dashboard" 
+                                       FontSize="12" 
+                                       Foreground="#888888"/>
+                        </StackPanel>
+                    </StackPanel>
+
+                    <!-- Title -->
+                    <StackPanel Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBlock Text="Assigned Orders Management" 
+                                   FontSize="24" 
+                                   FontWeight="Bold" 
+                                   HorizontalAlignment="Center"
+                                   Foreground="White"/>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="10" Margin="0,5,0,0">
+                            <Border Background="#4361ee" CornerRadius="10" Padding="8,4">
+                                <TextBlock FontSize="12" Foreground="White">
+                                    <Run Text="Orders: "/>
+                                    <Run Text="{Binding OrderCount}"/>
+                                </TextBlock>
+                            </Border>
+                            <Border Background="#ff6b35" 
+                                    CornerRadius="10" 
+                                    Padding="8,4"
+                                    IsVisible="{Binding IsLoading}">
+                                <TextBlock Text="Loading..." FontSize="12" Foreground="White"/>
+                            </Border>
+                        </StackPanel>
+                    </StackPanel>
+
+                    <!-- Action Buttons -->
+                    <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
+                        <Button Background="Transparent" 
+                                BorderBrush="#4361ee" 
+                                BorderThickness="1"
+                                Padding="12,8" 
+                                CornerRadius="6"
+                                Command="{Binding RefreshCommand}"
+                                ToolTip.Tip="Refresh Orders">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <PathIcon Data="{StaticResource SemiIconRefresh}" Width="16" Height="16" Foreground="#4361ee"/>
+                                <TextBlock Text="Refresh" Foreground="#4361ee"/>
+                            </StackPanel>
+                        </Button>
+                        
+                        <Button Background="#ff4757" 
+                                Foreground="White" 
+                                Padding="12,8" 
+                                CornerRadius="6"
+                                Command="{Binding LogoutCommand}"
+                                ToolTip.Tip="Logout">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <PathIcon Data="{StaticResource SemiIconQuit}" Width="16" Height="16"/>
+                                <TextBlock Text="Logout"/>
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <!-- Main Content -->
+            <ScrollViewer Grid.Row="1" Margin="10,20,10,10" VerticalScrollBarVisibility="Auto">
+                <StackPanel>
+                    <!-- Orders List -->
+                    <ItemsControl ItemsSource="{Binding AssignedOrders}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Background="#23242a" 
+                                        CornerRadius="12" 
+                                        Padding="20" 
+                                        Margin="0,0,0,15"
+                                        BorderBrush="#333333"
+                                        BorderThickness="1">
+                                    <StackPanel Spacing="15">
+                                        <!-- Order Header -->
+                                        <Grid ColumnDefinitions="*,Auto">
+                                            <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="15">
+                                                <TextBlock FontWeight="Bold" 
+                                                          FontSize="18"
+                                                          Foreground="White">
+                                                    <Run Text="Order #"/>
+                                                    <Run Text="{Binding Id}"/>
+                                                </TextBlock>
+                                                <Border Background="#4361ee" CornerRadius="15" Padding="10,5">
+                                                    <TextBlock Text="{Binding Status}" 
+                                                              FontSize="12" 
+                                                              FontWeight="SemiBold"
+                                                              Foreground="White"/>
+                                                </Border>
+                                            </StackPanel>
+                                            
+                                            <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="10">
+                                                <!-- Status Update Dropdown -->
+                                                <ComboBox ItemsSource="{Binding $parent[ItemsControl].((vm:AngajatViewModel)DataContext).AvailableStatuses}"
+                                                         SelectedItem="{Binding Status}"
+                                                         Background="#333333"
+                                                         Foreground="White"
+                                                         MinWidth="120">
+                                                    <ComboBox.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <TextBlock Text="{Binding}" Foreground="White"/>
+                                                        </DataTemplate>
+                                                    </ComboBox.ItemTemplate>
+                                                </ComboBox>
+                                                
+                                                <!-- Update Status Button -->
+                                                <Button Background="#4361ee" 
+                                                        Foreground="White" 
+                                                        Padding="10,5" 
+                                                        CornerRadius="6"
+                                                        Content="Update Status"
+                                                        Command="{Binding $parent[ItemsControl].((vm:AngajatViewModel)DataContext).UpdateOrderStatusCommand}"
+                                                        CommandParameter="{Binding}"/>
+                                            </StackPanel>
+                                        </Grid>
+
+                                        <!-- Client Information -->
+                                        <Border Background="#2a2d3a" CornerRadius="8" Padding="15">
+                                            <Grid ColumnDefinitions="*,*">
+                                                <StackPanel Grid.Column="0" Spacing="5">
+                                                    <TextBlock Text="Client Information" 
+                                                              FontWeight="SemiBold" 
+                                                              FontSize="14"
+                                                              Foreground="#4361ee"/>
+                                                    <TextBlock Foreground="White">
+                                                        <Run Text="Name: "/>
+                                                        <Run Text="{Binding Client.Nume}"/>
+                                                    </TextBlock>
+                                                    <TextBlock Foreground="#cccccc">
+                                                        <Run Text="Email: "/>
+                                                        <Run Text="{Binding Client.Email}"/>
+                                                    </TextBlock>
+                                                </StackPanel>
+                                                <StackPanel Grid.Column="1" Spacing="5">
+                                                    <TextBlock Text="Contact Details" 
+                                                              FontWeight="SemiBold" 
+                                                              FontSize="14"
+                                                              Foreground="#4361ee"/>
+                                                    <TextBlock Foreground="White">
+                                                        <Run Text="Username: "/>
+                                                        <Run Text="{Binding Client.Username}"/>
+                                                    </TextBlock>
+                                                    <TextBlock Foreground="#cccccc">
+                                                        <Run Text="Phone: "/>
+                                                        <Run Text="{Binding Client.Telefon}"/>
+                                                    </TextBlock>
+                                                </StackPanel>
+                                            </Grid>
+                                        </Border>
+
+                                        <!-- Products in Order -->
+                                        <StackPanel>
+                                            <StackPanel Orientation="Horizontal" Spacing="15" Margin="0,0,0,10">
+                                                <TextBlock Text="Products in Order" 
+                                                          FontWeight="SemiBold" 
+                                                          FontSize="16"
+                                                          Foreground="White"/>
+                                                <Border Background="#333333" CornerRadius="10" Padding="6,3">
+                                                    <TextBlock FontSize="12" Foreground="#cccccc">
+                                                        <Run Text="{Binding ComandaProduse.Count}"/>
+                                                        <Run Text=" items"/>
+                                                    </TextBlock>
+                                                </Border>
+                                            </StackPanel>
+                                            
+                                            <ItemsControl ItemsSource="{Binding ComandaProduse}">
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <Border Background="#1e1e1e" 
+                                                                CornerRadius="6" 
+                                                                Padding="12" 
+                                                                Margin="0,0,0,8">
+                                                            <Grid ColumnDefinitions="*,Auto,Auto,Auto,Auto">
+                                                                <StackPanel Grid.Column="0">
+                                                                    <TextBlock Text="{Binding Produs.Nume}" 
+                                                                              FontWeight="SemiBold" 
+                                                                              Foreground="White"/>
+                                                                    <TextBlock Text="{Binding Produs.Tip}" 
+                                                                              FontSize="12" 
+                                                                              Foreground="#888888"/>
+                                                                </StackPanel>
+                                                                
+                                                                <StackPanel Grid.Column="1" Margin="10,0">
+                                                                    <TextBlock Text="Ordered Qty" 
+                                                                              FontSize="10" 
+                                                                              Foreground="#888888"/>
+                                                                    <TextBlock Text="{Binding CantitateComanda}" 
+                                                                              FontWeight="Bold" 
+                                                                              FontSize="14"
+                                                                              Foreground="#4361ee"/>
+                                                                </StackPanel>
+                                                                
+                                                                <StackPanel Grid.Column="2" Margin="10,0">
+                                                                    <TextBlock Text="Order Price" 
+                                                                              FontSize="10" 
+                                                                              Foreground="#888888"/>
+                                                                    <TextBlock FontWeight="SemiBold" 
+                                                                              Foreground="#4361ee">
+                                                                        <Run Text="{Binding PretLaComanda}"/>
+                                                                        <Run Text=" lei"/>
+                                                                    </TextBlock>
+                                                                </StackPanel>
+                                                                
+                                                                <StackPanel Grid.Column="3" Margin="10,0">
+                                                                    <TextBlock Text="Current Stock" 
+                                                                              FontSize="10" 
+                                                                              Foreground="#888888"/>
+                                                                    <TextBox Text="{Binding Produs.Cantitate, Mode=TwoWay}" 
+                                                                            Background="#333333"
+                                                                            Foreground="White"
+                                                                            BorderBrush="#555555"
+                                                                            Width="80"
+                                                                            Padding="5"/>
+                                                                </StackPanel>
+                                                                
+                                                                <Button Grid.Column="4" 
+                                                                        Background="#28a745" 
+                                                                        Foreground="White" 
+                                                                        Padding="8,4" 
+                                                                        CornerRadius="4"
+                                                                        Content="Update Stock"
+                                                                        Click="UpdateStock_Click"
+                                                                        Tag="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=ItemsControl, AncestorLevel=1}, Path=DataContext}"
+                                                                        Margin="10,0,0,0"/>
+                                                            </Grid>
+                                                        </Border>
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
+                                        </StackPanel>
+
+                                        <!-- Order Actions -->
+                                        <Border Background="#2a2d3a" CornerRadius="8" Padding="15">
+                                            <Grid ColumnDefinitions="*,Auto">
+                                                <StackPanel Grid.Column="0" Spacing="5">
+                                                    <TextBlock Text="Order Management" 
+                                                              FontWeight="SemiBold" 
+                                                              FontSize="14"
+                                                              Foreground="#4361ee"/>
+                                                    <TextBlock Text="Update status to track order progress through: Preluat → Procesat → Finalizat" 
+                                                              FontSize="12" 
+                                                              Foreground="#888888"
+                                                              TextWrapping="Wrap"/>
+                                                </StackPanel>
+                                                
+                                                <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
+                                                    <Button Background="#ff6b35" 
+                                                            Foreground="White" 
+                                                            Padding="12,6" 
+                                                            CornerRadius="6"
+                                                            Content="Complete Order"
+                                                            Command="{Binding $parent[ItemsControl].((vm:AngajatViewModel)DataContext).CompleteOrderCommand}"
+                                                            CommandParameter="{Binding Id}"/>
+                                                </StackPanel>
+                                            </Grid>
+                                        </Border>
+                                    </StackPanel>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                    
+                    <!-- Pagination Controls -->
+                    <Border Background="#23242a" 
+                            CornerRadius="12" 
+                            Padding="20" 
+                            Margin="0,20,0,15"
+                            BorderBrush="#333333"
+                            BorderThickness="1"
+                            IsVisible="{Binding ShowPagination}">
+                        <Grid ColumnDefinitions="Auto,*,Auto">
+                            <!-- Previous Button -->
+                            <Button Grid.Column="0"
+                                    Background="#4361ee" 
+                                    Foreground="White" 
+                                    Padding="12,8" 
+                                    CornerRadius="6"
+                                    Command="{Binding PreviousPageCommand}"
+                                    IsEnabled="{Binding CanGoPreviousPage}"
+                                    ToolTip.Tip="Previous Page">
+                                <StackPanel Orientation="Horizontal" Spacing="5">
+                                    <TextBlock Text="◀" FontSize="12"/>
+                                    <TextBlock Text="Previous" FontSize="12"/>
+                                </StackPanel>
+                            </Button>
+                            
+                            <!-- Page Info -->
+                            <StackPanel Grid.Column="1" 
+                                       Orientation="Horizontal" 
+                                       HorizontalAlignment="Center" 
+                                       VerticalAlignment="Center" 
+                                       Spacing="15">
+                                <TextBlock Text="{Binding PageInfo}" 
+                                          FontSize="14" 
+                                          FontWeight="SemiBold"
+                                          Foreground="White"
+                                          VerticalAlignment="Center"/>
+                                          
+                                <!-- Page Size Selector -->
+                                <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                                    <TextBlock Text="Per page:" 
+                                              FontSize="12" 
+                                              Foreground="#888888"
+                                              VerticalAlignment="Center"/>
+                                    <ComboBox Background="#333333"
+                                             Foreground="White"
+                                             BorderBrush="#555555"
+                                             SelectedItem="{Binding PageSize}"
+                                             MinWidth="60">
+                                        <ComboBox.Items>
+                                            <sys:Int32>3</sys:Int32>
+                                            <sys:Int32>5</sys:Int32>
+                                            <sys:Int32>10</sys:Int32>
+                                            <sys:Int32>20</sys:Int32>
+                                        </ComboBox.Items>
+                                    </ComboBox>
+                                </StackPanel>
+                            </StackPanel>
+                            
+                            <!-- Next Button -->
+                            <Button Grid.Column="2"
+                                    Background="#4361ee" 
+                                    Foreground="White" 
+                                    Padding="12,8" 
+                                    CornerRadius="6"
+                                    Command="{Binding NextPageCommand}"
+                                    IsEnabled="{Binding CanGoNextPage}"
+                                    ToolTip.Tip="Next Page">
+                                <StackPanel Orientation="Horizontal" Spacing="5">
+                                    <TextBlock Text="Next" FontSize="12"/>
+                                    <TextBlock Text="▶" FontSize="12"/>
+                                </StackPanel>
+                            </Button>
+                        </Grid>
+                    </Border>
+                    
+                    <!-- Empty State -->
+                    <Border IsVisible="{Binding !AssignedOrders.Count}"
+                            Background="#23242a" 
+                            CornerRadius="12" 
+                            Padding="40" 
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center">
+                        <StackPanel Spacing="15" HorizontalAlignment="Center">
+                            <TextBlock Text="📋" 
+                                      FontSize="48" 
+                                      HorizontalAlignment="Center"/>
+                            <TextBlock Text="No orders assigned yet" 
+                                       FontSize="18" 
+                                       FontWeight="SemiBold"
+                                       Foreground="#888888"
+                                       HorizontalAlignment="Center"/>
+                            <TextBlock Text="Orders assigned to you will appear here for management" 
+                                       FontSize="14" 
+                                       Foreground="#666666"
+                                       HorizontalAlignment="Center"/>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </ScrollViewer>
+        </Grid>
+    </Panel>
+</Window> 

@@ -1,0 +1,252 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:magazin_mercerie.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="500" d:DesignHeight="600"
+        x:Class="magazin_mercerie.Views.ClientViews.CartDialog"
+        x:DataType="vm:CartViewModel"
+        Title="Shopping Cart"
+        Width="500" Height="600"
+        WindowStartupLocation="CenterOwner"
+        TransparencyLevelHint="AcrylicBlur"
+        Background="Transparent"
+        ExtendClientAreaToDecorationsHint="True">
+
+    <Panel>
+        <ExperimentalAcrylicBorder IsHitTestVisible="False">
+            <ExperimentalAcrylicBorder.Material>
+                <ExperimentalAcrylicMaterial
+                    BackgroundSource="Digger"
+                    TintColor="Black"
+                    TintOpacity="1"
+                    MaterialOpacity="0.65" />
+            </ExperimentalAcrylicBorder.Material>
+        </ExperimentalAcrylicBorder>
+
+        <Grid RowDefinitions="Auto,*,Auto" Margin="20">
+            <!-- Header -->
+            <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Margin="0,0,0,20">
+                <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="10">
+                    <PathIcon Data="{StaticResource SemiIconCart}" Width="24" Height="24" Foreground="#4361ee"/>
+                    <TextBlock Text="Shopping Cart" FontSize="20" FontWeight="Bold" VerticalAlignment="Center"/>
+                </StackPanel>
+                
+                <Button Grid.Column="1" Content="✕" 
+                       Background="Transparent" 
+                       Foreground="#e74c3c"
+                       FontSize="18"
+                       Padding="8"
+                       Click="CloseDialog"/>
+            </Grid>
+
+            <!-- Cart Items -->
+            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                <StackPanel>
+                    <!-- Empty Cart Message -->
+                    <Border IsVisible="{Binding !HasItems}" 
+                           Background="#23242a" 
+                           CornerRadius="8" 
+                           Padding="40"
+                           HorizontalAlignment="Center">
+                        <StackPanel Spacing="10">
+                            <PathIcon Data="{StaticResource SemiIconCart}" 
+                                     Width="48" 
+                                     Height="48" 
+                                     Opacity="0.5"
+                                     HorizontalAlignment="Center"/>
+                            <TextBlock Text="Your cart is empty" 
+                                      FontSize="16" 
+                                      Opacity="0.7"
+                                      HorizontalAlignment="Center"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Cart Items List -->
+                    <ItemsControl ItemsSource="{Binding CartItems}" IsVisible="{Binding HasItems}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Background="#23242a" CornerRadius="8" Padding="20" Margin="0,0,0,15">
+                                    <Grid RowDefinitions="Auto,Auto,Auto" ColumnDefinitions="*">
+                                        <!-- Product Header -->
+                                        <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Margin="0,0,0,15">
+                                            <StackPanel Grid.Column="0">
+                                                <TextBlock Text="{Binding Product.Nume}" 
+                                                          FontWeight="Bold" 
+                                                          FontSize="16"
+                                                          Margin="0,0,0,5"/>
+                                                <TextBlock Text="{Binding Product.Tip}" 
+                                                          Opacity="0.6" 
+                                                          FontSize="13"/>
+                                            </StackPanel>
+                                            
+                                            <!-- Remove Button -->
+                                            <Button Grid.Column="1" 
+                                                   Content="✕" 
+                                                   Background="#e74c3c" 
+                                                   Foreground="White"
+                                                   Width="32" 
+                                                   Height="32"
+                                                   FontSize="16"
+                                                   CornerRadius="16"
+                                                   VerticalAlignment="Top"
+                                                   Command="{Binding $parent[ItemsControl].((vm:CartViewModel)DataContext).RemoveFromCartCommand}"
+                                                   CommandParameter="{Binding}"/>
+                                        </Grid>
+                                        
+                                        <!-- Price and Quantity Row -->
+                                        <Grid Grid.Row="1" ColumnDefinitions="Auto,*,Auto" Margin="0,0,0,15">
+                                            <!-- Unit Price -->
+                                            <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                                <TextBlock Text="Price per item:" 
+                                                          FontSize="12" 
+                                                          Opacity="0.7"
+                                                          Margin="0,0,0,2"/>
+                                                <TextBlock Text="{Binding Product.Pret, StringFormat='{}{0:F2} lei'}" 
+                                                          FontWeight="SemiBold" 
+                                                          FontSize="14"/>
+                                            </StackPanel>
+                                            
+                                            <!-- Quantity Controls -->
+                                            <StackPanel Grid.Column="2" 
+                                                       Orientation="Horizontal" 
+                                                       Spacing="12" 
+                                                       VerticalAlignment="Center">
+                                                <TextBlock Text="Quantity:" 
+                                                          FontSize="12" 
+                                                          Opacity="0.7"
+                                                          VerticalAlignment="Center"
+                                                          Margin="0,0,10,0"/>
+                                                
+                                                <Border Background="#2d2d30" 
+                                                       CornerRadius="6" 
+                                                       Padding="8">
+                                                    <StackPanel Orientation="Horizontal" Spacing="12">
+                                                        <Button Content="−" 
+                                                               Background="#e74c3c" 
+                                                               Foreground="White"
+                                                               Width="32" 
+                                                               Height="32"
+                                                               FontSize="20"
+                                                               FontWeight="Bold"
+                                                               CornerRadius="4"
+                                                               Padding="0"
+                                                               Command="{Binding $parent[ItemsControl].((vm:CartViewModel)DataContext).DecreaseQuantityCommand}"
+                                                               CommandParameter="{Binding}"/>
+                                                        
+                                                        <Border Background="#4361ee" 
+                                                               CornerRadius="4" 
+                                                               Padding="12,8" 
+                                                               MinWidth="50">
+                                                            <TextBlock Text="{Binding Quantity}" 
+                                                                      FontWeight="Bold" 
+                                                                      FontSize="16"
+                                                                      Foreground="White"
+                                                                      HorizontalAlignment="Center"
+                                                                      VerticalAlignment="Center"/>
+                                                        </Border>
+                                                        
+                                                        <Button Content="+" 
+                                                               Background="#4361ee" 
+                                                               Foreground="White"
+                                                               Width="32" 
+                                                               Height="32"
+                                                               FontSize="20"
+                                                               FontWeight="Bold"
+                                                               CornerRadius="4"
+                                                               Padding="0"
+                                                               Command="{Binding $parent[ItemsControl].((vm:CartViewModel)DataContext).IncreaseQuantityCommand}"
+                                                               CommandParameter="{Binding}"/>
+                                                    </StackPanel>
+                                                </Border>
+                                            </StackPanel>
+                                        </Grid>
+                                        
+                                        <!-- Total Price Row -->
+                                        <Border Grid.Row="2" 
+                                               Background="#4361ee" 
+                                               CornerRadius="6" 
+                                               Padding="15,10">
+                                            <Grid ColumnDefinitions="*,Auto">
+                                                <TextBlock Grid.Column="0" 
+                                                          Text="Item Total:" 
+                                                          FontWeight="SemiBold" 
+                                                          FontSize="14"
+                                                          Foreground="White"
+                                                          VerticalAlignment="Center"/>
+                                                <TextBlock Grid.Column="1" 
+                                                          Text="{Binding TotalPrice, StringFormat='{}{0:F2} lei'}" 
+                                                          FontWeight="Bold" 
+                                                          FontSize="16"
+                                                          Foreground="White"
+                                                          VerticalAlignment="Center"/>
+                                            </Grid>
+                                        </Border>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </ScrollViewer>
+
+            <!-- Footer with Total and Actions -->
+            <Grid Grid.Row="2" RowDefinitions="Auto,Auto" IsVisible="{Binding HasItems}" Margin="0,20,0,0">
+                <!-- Total -->
+                <Border Grid.Row="0" Background="#23242a" CornerRadius="8" Padding="20" Margin="0,0,0,20">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock Text="Cart Total:" FontSize="16" Opacity="0.8" Margin="0,0,0,5"/>
+                            <TextBlock Text="{Binding TotalItemCount, StringFormat='{}{0} items'}" 
+                                      FontSize="14" 
+                                      Opacity="0.6"/>
+                        </StackPanel>
+                        <TextBlock Grid.Column="1" 
+                                  Text="{Binding TotalPrice, StringFormat='{}{0:F2} lei'}" 
+                                  FontSize="24" 
+                                  FontWeight="Bold"
+                                  Foreground="#4361ee"
+                                  VerticalAlignment="Center"/>
+                    </Grid>
+                </Border>
+
+                <!-- Action Buttons -->
+                <Grid Grid.Row="1" ColumnDefinitions="*,*">
+                    <Button Grid.Column="0" 
+                           Content="Clear Cart" 
+                           Background="#e74c3c" 
+                           Foreground="White"
+                           Padding="20,10"
+                           FontSize="14"
+                           FontWeight="SemiBold"
+                           CornerRadius="6"
+                           Margin="0,0,10,0"
+                           Command="{Binding ClearCartCommand}">
+                        <Button.Styles>
+                            <Style Selector="Button:pointerover /template/ ContentPresenter">
+                                <Setter Property="Background" Value="#d63031"/>
+                            </Style>
+                        </Button.Styles>
+                    </Button>
+                    
+                    <Button Grid.Column="1" 
+                           Content="Place Order" 
+                           Background="#4361ee" 
+                           Foreground="White"
+                           Padding="20,10"
+                           FontSize="14"
+                           FontWeight="SemiBold"
+                           CornerRadius="6"
+                           Margin="10,0,0,0"
+                           Command="{Binding PlaceOrderCommand}">
+                        <Button.Styles>
+                            <Style Selector="Button:pointerover /template/ ContentPresenter">
+                                <Setter Property="Background" Value="#3a56d4"/>
+                            </Style>
+                        </Button.Styles>
+                    </Button>
+                </Grid>
+            </Grid>
+        </Grid>
+    </Panel>
+</Window> 

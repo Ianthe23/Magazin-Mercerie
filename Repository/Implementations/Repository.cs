@@ -17,6 +17,11 @@ public class Repository<T> : IRepository<T> where T : class
     {
         return _context.Set<T>();
     }
+    
+    protected magazin_mercerie.AppDbContext GetContext()
+    {
+        return _context;
+    }
 
     public virtual async Task<List<T>> GetAllAsync()
     {

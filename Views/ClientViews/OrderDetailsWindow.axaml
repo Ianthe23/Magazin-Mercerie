@@ -1,0 +1,139 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:magazin_mercerie.ViewModels"
+        xmlns:models="clr-namespace:;assembly=magazin-mercerie"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
+        x:Class="magazin_mercerie.Views.ClientViews.OrderDetailsWindow"
+        x:DataType="models:Comanda"
+        Title="Order Details"
+        TransparencyLevelHint="AcrylicBlur"
+        Background="Transparent"
+        ExtendClientAreaToDecorationsHint="True">
+
+    <Panel>
+        <ExperimentalAcrylicBorder IsHitTestVisible="False">
+            <ExperimentalAcrylicBorder.Material>
+                <ExperimentalAcrylicMaterial
+                    BackgroundSource="Digger"
+                    TintColor="Black"
+                    TintOpacity="1"
+                    MaterialOpacity="0.65" />
+            </ExperimentalAcrylicBorder.Material>
+        </ExperimentalAcrylicBorder>
+
+        <Grid RowDefinitions="Auto,*,Auto" Margin="20">
+            <!-- Header -->
+            <Border Grid.Row="0" Background="#1e1e1e" CornerRadius="8" Padding="20" Margin="0,0,0,20">
+                <Grid ColumnDefinitions="*,Auto">
+                    <StackPanel Grid.Column="0">
+                        <TextBlock FontWeight="Bold" FontSize="20" Foreground="White">
+                            <Run Text="Order #"/>
+                            <Run Text="{Binding Id}"/>
+                        </TextBlock>
+                        <TextBlock FontSize="14" Foreground="#888888" Margin="0,5,0,0">
+                            <Run Text="Status: "/>
+                            <Run Text="{Binding Status}" Foreground="#4361ee"/>
+                        </TextBlock>
+                    </StackPanel>
+                    
+                    <Border Grid.Column="1" Background="#4361ee" CornerRadius="12" Padding="12,6">
+                        <TextBlock Text="{Binding Status}" FontSize="12" FontWeight="SemiBold" Foreground="White"/>
+                    </Border>
+                </Grid>
+            </Border>
+
+            <!-- Content -->
+            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                <StackPanel Spacing="20">
+                    <!-- Employee Information -->
+                    <Border Background="#23242a" CornerRadius="8" Padding="20">
+                        <StackPanel Spacing="10">
+                            <TextBlock Text="Assigned Employee" FontSize="16" FontWeight="SemiBold" Foreground="#4361ee"/>
+                            <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto,Auto">
+                                <Border Grid.Row="0" Grid.RowSpan="3" Background="#4361ee" CornerRadius="25" 
+                                        Width="50" Height="50" Margin="0,0,15,0">
+                                    <TextBlock FontWeight="Bold" FontSize="20" 
+                                               HorizontalAlignment="Center" VerticalAlignment="Center"
+                                               Foreground="White" Text="👤"/>
+                                </Border>
+                                
+                                <TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding Angajat.Nume}" 
+                                           FontWeight="SemiBold" FontSize="16" Foreground="White"/>
+                                <TextBlock Grid.Column="1" Grid.Row="1" Text="{Binding Angajat.Email}" 
+                                           FontSize="14" Foreground="#cccccc"/>
+                                <TextBlock Grid.Column="1" Grid.Row="2" Text="{Binding Angajat.Telefon}" 
+                                           FontSize="14" Foreground="#cccccc"/>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Products -->
+                    <Border Background="#23242a" CornerRadius="8" Padding="20">
+                        <StackPanel Spacing="15">
+                            <StackPanel Orientation="Horizontal" Spacing="15">
+                                <TextBlock Text="Products in Order" FontSize="16" FontWeight="SemiBold" Foreground="#4361ee"/>
+                                <Border Background="#333333" CornerRadius="10" Padding="6,3">
+                                    <TextBlock FontSize="12" Foreground="#cccccc">
+                                        <Run Text="{Binding ComandaProduse.Count}"/>
+                                        <Run Text=" items"/>
+                                    </TextBlock>
+                                </Border>
+                            </StackPanel>
+                            
+                            <ItemsControl ItemsSource="{Binding ComandaProduse}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate x:DataType="models:ComandaProdus">
+                                        <Border Background="#1e1e1e" CornerRadius="6" Padding="15" Margin="0,0,0,10">
+                                            <Grid ColumnDefinitions="*,Auto,Auto">
+                                                <StackPanel Grid.Column="0">
+                                                    <TextBlock Text="{Binding Produs.Nume}" FontWeight="SemiBold" 
+                                                              FontSize="16" Foreground="White"/>
+                                                    <TextBlock Text="{Binding Produs.Tip}" FontSize="12" 
+                                                              Foreground="#888888" Margin="0,2,0,0"/>
+                                                </StackPanel>
+                                                
+                                                <StackPanel Grid.Column="1" Margin="15,0" HorizontalAlignment="Right">
+                                                    <TextBlock Text="Ordered Qty" FontSize="10" Foreground="#888888"/>
+                                                    <TextBlock Text="{Binding CantitateComanda}" FontWeight="SemiBold" 
+                                                              FontSize="14" Foreground="White" HorizontalAlignment="Center"/>
+                                                </StackPanel>
+                                                
+                                                <StackPanel Grid.Column="2" HorizontalAlignment="Right">
+                                                    <TextBlock Text="Price" FontSize="10" Foreground="#888888"/>
+                                                    <TextBlock FontWeight="SemiBold" FontSize="16" Foreground="#4361ee">
+                                                        <Run Text="{Binding PretLaComanda}"/>
+                                                        <Run Text=" lei"/>
+                                                    </TextBlock>
+                                                </StackPanel>
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                            
+                            <!-- Total (calculated from products) -->
+                            <Border Background="#2a2d3a" CornerRadius="6" Padding="15">
+                                <Grid ColumnDefinitions="*,Auto">
+                                    <TextBlock Grid.Column="0" Text="Total Amount" FontWeight="SemiBold" 
+                                              FontSize="16" Foreground="White"/>
+                                    <TextBlock Grid.Column="1" FontWeight="Bold" FontSize="18" Foreground="#4361ee">
+                                        <Run Text="{Binding TotalAmount}"/>
+                                        <Run Text=" lei"/>
+                                    </TextBlock>
+                                </Grid>
+                            </Border>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </ScrollViewer>
+
+            <!-- Footer -->
+            <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Spacing="10" Margin="0,20,0,0">
+                <Button Content="Close" Background="#666666" Foreground="White" 
+                        Padding="20,10" CornerRadius="6" Click="CloseButton_Click"/>
+            </StackPanel>
+        </Grid>
+    </Panel>
+</Window> 

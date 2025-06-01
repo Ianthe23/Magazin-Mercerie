@@ -8,6 +8,7 @@ namespace magazin_mercerie
     {
         public DbSet<Produs> Produse { get; set; }
         public DbSet<Comanda> Comenzi { get; set; }
+        public DbSet<ComandaProdus> ComandaProduse { get; set; }
         public DbSet<Client> Clienti { get; set; }
         public DbSet<Angajat> Angajati { get; set; }
         public DbSet<AngajatMagazin> AngajatiMagazin { get; set; }
@@ -33,6 +34,7 @@ namespace magazin_mercerie
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {   
             base.OnModelCreating(modelBuilder);
+            
             modelBuilder.Entity<Produs>()
                 .HasKey(p => p.Id);
 
@@ -49,10 +51,27 @@ namespace magazin_mercerie
                 .WithMany(a => a.Comenzi)
                 .HasForeignKey(c => c.AngajatId);
 
-            modelBuilder.Entity<Comanda>()
-                .HasMany(c => c.Produse)
+            // Configure ComandaProdus junction table with quantity and price
+            modelBuilder.Entity<ComandaProdus>()
+                .HasKey(cp => new { cp.ComandaId, cp.ProdusId });
+
+            modelBuilder.Entity<ComandaProdus>()
+                .Property(cp => cp.ProdusId)
+                .HasColumnName("ProduseId");
+
+            modelBuilder.Entity<ComandaProdus>()
+                .HasOne(cp => cp.Comanda)
+                .WithMany(c => c.ComandaProduse)
+                .HasForeignKey(cp => cp.ComandaId);
+
+            modelBuilder.Entity<ComandaProdus>()
+                .HasOne(cp => cp.Produs)
                 .WithMany()
-                .UsingEntity(j => j.ToTable("ComandaProduse"));
+                .HasForeignKey(cp => cp.ProdusId);
+
+            // Ignore the computed Produse property to prevent unwanted FK relationship
+            modelBuilder.Entity<Comanda>()
+                .Ignore(c => c.Produse);
 
             modelBuilder.Entity<User>()
                 .HasKey(u => u.Id);

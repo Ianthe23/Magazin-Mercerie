@@ -10,10 +10,16 @@ using Windows = Avalonia.Controls.Window;
 using log4net;
 using System.Diagnostics;
 using System.Threading;
+using System.ComponentModel.DataAnnotations;
+using Microsoft.Extensions.DependencyInjection;
+using magazin_mercerie.Service;
+using magazin_mercerie.Views.LoginViews;
+using System.Linq;
 
 public partial class LoginClientViewModel : ViewModelBase
 {
     private readonly IService _service;
+    private readonly IUserSessionService _userSessionService;
     private readonly ILog _logger;
     private string _username = string.Empty;
     private string _password = string.Empty;
@@ -102,12 +108,13 @@ public partial class LoginClientViewModel : ViewModelBase
     {
         try
         {
-            _service = App.ServiceProvider.GetService(typeof(IService)) as IService;
+            _service = App.ServiceProvider?.GetService<IService>();
+            _userSessionService = App.ServiceProvider?.GetService<IUserSessionService>();
             _logger = LogManager.GetLogger(typeof(LoginClientViewModel));
             _logger.Debug("LoginClientViewModel initialized");
             
             
-            LoginCommand = new AsyncRelayCommand(OnLoginAsync);
+            LoginCommand = new AsyncRelayCommand(LoginAsync);
             LoginAngajatCommand = new RelayCommand(OnLoginAngajat);
         }
         catch (Exception ex)
@@ -120,46 +127,35 @@ public partial class LoginClientViewModel : ViewModelBase
         }
     }
 
-    private async Task OnLoginAsync()
+    private async Task LoginAsync()
     {
+        _logger?.Debug($"Login attempt for username: {Username}");
+        Console.WriteLine($"Login attempt for user: {Username}");
+        
+        if (string.IsNullOrWhiteSpace(Username) || string.IsNullOrWhiteSpace(Password))
+        {
+            ErrorMessage = "Please enter both username and password";
+            _logger?.Warn("Login attempted with empty username or password");
+            return;
+        }
+
+        IsLoading = true;
+        ErrorMessage = string.Empty;
+        SuccessMessage = string.Empty;
+
         try
         {
-            _logger.Debug($"Login attempt started with username: {Username}");
-            Console.WriteLine($"Login attempt started with username: {Username}");
-            
-            // Validate inputs
-            bool hasValidationErrors = false;
-            
-            if (string.IsNullOrWhiteSpace(Username))
-            {
-                UsernameHasError = true;
-                hasValidationErrors = true;
-            }
-            
-            if (string.IsNullOrWhiteSpace(Password))
-            {
-                PasswordHasError = true;
-                hasValidationErrors = true;
-            }
-            
-            if (hasValidationErrors)
-            {
-                ErrorMessage = "Username and password cannot be empty";
-                _logger.Warn("Login attempt with empty username or password");
-                return;
-            }
-            
-            IsLoading = true;
-            ErrorMessage = string.Empty;
-            SuccessMessage = string.Empty;
-            
-            _logger.Debug("Calling service.LoginClient...");
             var user = await _service.LoginClient(Username, Password);
-            
             if (user != null)
             {
-                _logger.Info($"Successful login for {Username}");
+                _logger?.Info($"Successful login for {Username}");
                 Console.WriteLine($"Login successful for user: {Username}");
+                
+                // Set the current user in the session service
+                _userSessionService?.SetCurrentUser(user);
+                
+                // ALSO register this user for the MainWindow specifically
+                _userSessionService?.SetWindowUser("MainWindow", user);
                 
                 // Set success message
                 SuccessMessage = $"Welcome {user.Nume}! Login successful.";
@@ -170,32 +166,30 @@ public partial class LoginClientViewModel : ViewModelBase
                     await Task.Delay(2500); // 2.5 seconds delay
                     
                     // Login successful - open main window
-                    _logger.Debug("Creating MainWindow...");
+                    _logger?.Debug("Creating MainWindow...");
                     var mainWindow = new MainWindow();
-                    _logger.Debug("MainWindow created successfully");
+                    _logger?.Debug("MainWindow created successfully");
                     
-                    // Show the window before closing the login window
-                    _logger.Debug("Showing MainWindow...");
+                    // Show the window and set it as MainWindow before closing the login window
+                    _logger?.Debug("Showing MainWindow...");
                     mainWindow.Show();
-                    _logger.Debug("MainWindow shown successfully");
+                    _logger?.Debug("MainWindow shown successfully");
                     
-                    // Close the login window
-                    var currentWindow = GetCurrentWindow();
-                    if (currentWindow != null)
-                    {
-                        _logger.Debug("Closing login window...");
-                        currentWindow.Close();
-                        _logger.Debug("Login window closed");
-                    }
-                    else
-                    {
-                        _logger.Error("Could not find current window to close");
-                        Console.WriteLine("ERROR: Could not find current window to close");
-                    }
+                    // KEEP LOGIN WINDOW OPEN: Don't set as MainWindow to allow multiple logins
+                    // Don't change the MainWindow so login window stays as the main window
+                    
+                    // KEEP LOGIN WINDOW OPEN: Don't close the login window
+                    // This allows multiple users to login from the same application instance
+                    _logger?.Debug("Keeping login window open for additional logins...");
+                    
+                    // Clear the form for next user
+                    Username = string.Empty;
+                    Password = string.Empty;
+                    SuccessMessage = string.Empty;
                 }
                 catch (Exception ex)
                 {
-                    _logger.Error("Error creating or showing main window", ex);
+                    _logger?.Error("Error creating or showing main window", ex);
                     Console.WriteLine($"ERROR creating/showing main window: {ex.Message}");
                     ErrorMessage = $"Error opening main window: {ex.Message}";
                 }
@@ -203,17 +197,14 @@ public partial class LoginClientViewModel : ViewModelBase
             else
             {
                 ErrorMessage = "Invalid username or password";
-                _logger.Warn($"Failed login for username: {Username}");
+                _logger?.Warn($"Failed login for username: {Username}");
                 Console.WriteLine($"Login failed for user: {Username}");
-                
-                // Show error popup for login failures
-                // await ShowMessageBoxAsync("Login Failed", "Invalid username or password. Please try again.");
             }
         }
         catch (Exception ex)
         {
             ErrorMessage = $"Login error: {ex.Message}";
-            _logger.Error($"Login error: {ex.Message}", ex);
+            _logger?.Error($"Login error: {ex.Message}", ex);
             Console.WriteLine($"ERROR during login: {ex.Message}");
             
             // Show error popup for exceptions

@@ -13,6 +13,8 @@ using System.IO;
 using System.Diagnostics;
 using System.Reflection;
 using log4net;
+using magazin_mercerie.Service;
+using System.Threading.Tasks;
 
 namespace magazin_mercerie;
 
@@ -51,6 +53,22 @@ public partial class App : Application
             services.AddScoped<global::IPatronRepository, global::PatronRepository>();
             services.AddScoped<global::IProdusRepository, global::ProdusRepository>();
             services.AddScoped<global::IComandaRepository, global::ComandaRepository>();
+            
+            // Register Password Service
+            _logger.Debug("Registering password service");
+            services.AddScoped<IPasswordService, PasswordService>();
+            
+            // Register Cart Service
+            _logger.Debug("Registering cart service");
+            services.AddSingleton<ICartService, CartService>();
+            
+            // Register User Session Service
+            _logger.Debug("Registering user session service");
+            services.AddSingleton<IUserSessionService, UserSessionService>();
+            
+            // Register Product Update Notification Service
+            _logger.Debug("Registering product update notification service");
+            services.AddSingleton<IProductUpdateNotificationService, ProductUpdateNotificationService>();
             
             // Register Service
             _logger.Debug("Registering service layer");

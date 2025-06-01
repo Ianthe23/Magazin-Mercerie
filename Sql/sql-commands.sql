@@ -1,1 +1,1 @@
-SELECT * FROM Utilizatori;
+UPDATE Utilizatori SET Password = '$2a$12$nhqFzd3ral61nbN6wH.QQuQdzFZaLBtAeT9jhoaPcyNMxqtYI0KSG' WHERE Username = 'ana.pastin';

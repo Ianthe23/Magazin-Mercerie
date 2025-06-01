@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using magazin_mercerie;
 
@@ -10,9 +11,11 @@ using magazin_mercerie;
 namespace magazinmercerie.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250601083310_AddComandaProduseJunctionTable")]
+    partial class AddComandaProduseJunctionTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.4");
@@ -71,6 +74,9 @@ namespace magazinmercerie.Migrations
                     b.Property<decimal>("Cantitate")
                         .HasColumnType("TEXT");
 
+                    b.Property<Guid?>("ComandaId")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Nume")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -82,6 +88,8 @@ namespace magazinmercerie.Migrations
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ComandaId");
 
                     b.ToTable("Produse");
                 });
@@ -198,9 +206,18 @@ namespace magazinmercerie.Migrations
                     b.Navigation("Produs");
                 });
 
+            modelBuilder.Entity("Produs", b =>
+                {
+                    b.HasOne("Comanda", null)
+                        .WithMany("Produse")
+                        .HasForeignKey("ComandaId");
+                });
+
             modelBuilder.Entity("Comanda", b =>
                 {
                     b.Navigation("ComandaProduse");
+
+                    b.Navigation("Produse");
                 });
 
             modelBuilder.Entity("Client", b =>

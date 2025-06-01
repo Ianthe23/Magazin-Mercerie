@@ -1,0 +1,74 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="250"
+        x:Class="magazin_mercerie.Views.PatronViews.ConfirmDeleteDialog"
+        Title="Confirm Action"
+        Width="400" Height="250"
+        WindowStartupLocation="CenterOwner"
+        CanResize="False"
+        SystemDecorations="BorderOnly"
+        TransparencyLevelHint="AcrylicBlur"
+        Background="Transparent"
+        ExtendClientAreaToDecorationsHint="True">
+
+    <Panel>
+        <ExperimentalAcrylicBorder IsHitTestVisible="False">
+            <ExperimentalAcrylicBorder.Material>
+                <ExperimentalAcrylicMaterial
+                    BackgroundSource="Digger"
+                    TintColor="Black"
+                    TintOpacity="1"
+                    MaterialOpacity="0.85" />
+            </ExperimentalAcrylicBorder.Material>
+        </ExperimentalAcrylicBorder>
+
+        <Grid RowDefinitions="Auto,*,Auto" Margin="30">
+            <!-- Header -->
+            <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Margin="0,0,0,20">
+                <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="15">
+                    <PathIcon Data="{StaticResource SemiIconDelete}" Width="24" Height="24" Foreground="#e74c3c"/>
+                    <TextBlock Text="Confirm Deletion" FontSize="18" FontWeight="Bold" VerticalAlignment="Center"/>
+                </StackPanel>
+                
+                <Button Grid.Column="1" Background="Transparent" Padding="8" Click="CancelDelete" ToolTip.Tip="Cancel">
+                    <PathIcon Data="{StaticResource SemiIconClose}" Width="16" Height="16"/>
+                </Button>
+            </Grid>
+
+            <!-- Message Content -->
+            <StackPanel Grid.Row="1" Spacing="15" VerticalAlignment="Center">
+                <TextBlock Name="MessageTextBlock" 
+                           Text="Are you sure you want to delete this item?" 
+                           FontSize="14" 
+                           TextWrapping="Wrap" 
+                           HorizontalAlignment="Center"
+                           TextAlignment="Center"/>
+                
+                <TextBlock Text="This action cannot be undone." 
+                           FontSize="12" 
+                           Opacity="0.7" 
+                           HorizontalAlignment="Center"
+                           TextAlignment="Center"/>
+            </StackPanel>
+
+            <!-- Action Buttons -->
+            <Grid Grid.Row="2" ColumnDefinitions="*,Auto,Auto" Margin="0,20,0,0">
+                <Button Grid.Column="1" Content="Cancel" Padding="20,10" Margin="0,0,10,0" 
+                        Background="Transparent" BorderBrush="#666" BorderThickness="1"
+                        Click="CancelDelete"/>
+                
+                <Button Grid.Column="2" Content="Delete" Padding="20,10" 
+                        Background="#e74c3c" Foreground="White"
+                        Click="ConfirmDelete">
+                    <Button.Styles>
+                        <Style Selector="Button:pointerover /template/ ContentPresenter">
+                            <Setter Property="Background" Value="#c0392b"/>
+                        </Style>
+                    </Button.Styles>
+                </Button>
+            </Grid>
+        </Grid>
+    </Panel>
+</Window> 

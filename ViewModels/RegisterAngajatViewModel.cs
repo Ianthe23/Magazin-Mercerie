@@ -245,18 +245,19 @@ public partial class RegisterAngajatViewModel : ViewModelBase
                 _logger.Warn("Registration attempt with invalid fields");
                 return;
             }
+
+            // Register user based on selected type
+            var user = await _service.RegisterAngajat(Name, Email, Username, Password, Phone, SelectedTipAngajat);
             
-            // Register user
-            var user = await _service.RegisterAngajat(Name, Email, Username, Password, Phone);
             if (user != null)
             {
-                // Registration successful - go back to login
                 _logger.Info($"Successfully registered employee: {Username}");
-                SuccessMessage = $"Welcome {Name}! Your account has been created successfully.";
-
+                SuccessMessage = $"Welcome {Name}! Your employee account has been created successfully.";
+                
                 // Show success message for a brief moment (2-3 seconds)
                 await Task.Delay(2500); // 2.5 seconds delay
-
+                
+                // Registration successful - go back to login
                 var currentWindow = GetCurrentWindow();
                 if (currentWindow?.DataContext is LoginViewModel loginViewModel)
                 {
@@ -267,8 +268,6 @@ public partial class RegisterAngajatViewModel : ViewModelBase
             {
                 ErrorMessage = "Registration failed";
                 _logger.Warn($"Failed to register employee: {Username}");
-                // await ShowMessageBoxAsync("Registration Failed", 
-                //     "Registration failed. Please try again or contact support.");
             }
 
         }
