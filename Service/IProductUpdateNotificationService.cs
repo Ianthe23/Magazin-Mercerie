@@ -2,12 +2,16 @@ using System;
 
 namespace magazin_mercerie.Service
 {
+    /*
+    * This interface is used to notify the views about the changes in the products and orders.
+    * It is used to update the views about the changes in the products and orders.
+    */
     public interface IProductUpdateNotificationService
     {
         event EventHandler<ProductQuantityUpdatedEventArgs>? ProductQuantityUpdated;
         event EventHandler? ProductsChanged;
         event EventHandler<OrderStatusUpdatedEventArgs>? OrderStatusUpdated;
-        
+
         void NotifyProductQuantityUpdated(Guid productId, decimal newQuantity);
         void NotifyProductsChanged();
         void NotifyOrderStatusUpdated(Guid orderId, Guid clientId, Status newStatus, string clientName);
