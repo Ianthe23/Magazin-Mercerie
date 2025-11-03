@@ -39,3 +39,39 @@ jobs:
           body: "Automatic Windows build for ${{ github.ref_name }}."
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  build-macos:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+
+      - name: Publish macOS self-contained single-file
+        run: dotnet publish magazin-mercerie.csproj -c Release -r osx-arm64 -p:PublishSingleFile=true -p:SelfContained=true -p:IncludeNativeLibrariesForSelfExtract=true
+
+      - name: Create .app bundle
+        run: |
+          APP_NAME=magazin-mercerie
+          RUNTIME=osx-arm64
+          PUBLISH_DIR=bin/Release/net9.0/${RUNTIME}/publish
+          APP_DIR=${APP_NAME}.app
+          mkdir -p ${APP_DIR}/Contents/MacOS ${APP_DIR}/Contents/Resources
+          cp Packaging/macos/Info.plist ${APP_DIR}/Contents/Info.plist
+          cp ${PUBLISH_DIR}/${APP_NAME} ${APP_DIR}/Contents/MacOS/${APP_NAME}
+          chmod +x ${APP_DIR}/Contents/MacOS/${APP_NAME}
+
+      - name: Zip .app
+        run: zip -r magazin-mercerie-macOS.zip magazin-mercerie.app
+
+      - name: Upload ZIP to Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: magazin-mercerie-macOS.zip
+          body: "Automatic macOS build for ${{ github.ref_name }}."
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

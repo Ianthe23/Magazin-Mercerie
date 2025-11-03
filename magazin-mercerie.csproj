@@ -6,9 +6,7 @@
     <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
-    <!-- Publish targets (Windows + others if needed) -->
     <RuntimeIdentifiers>win-x64;win-arm64;osx-x64;osx-arm64;linux-x64</RuntimeIdentifiers>
-    <!-- Optional Windows exe icon -->
     <ApplicationIcon>Assets/avalonia-logo.ico</ApplicationIcon>
   </PropertyGroup>
 
